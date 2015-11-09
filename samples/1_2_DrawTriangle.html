@@ -1,0 +1,131 @@
+<html>
+<head>
+	<title>draw triangle</title>
+	<style type="text/css">
+		#canvas
+		{
+			border: 1px solid #333;
+		}
+	</style>
+
+	<script type="x-shader/x-vertex" id="vs-src">
+
+		attribute vec2 pos;
+
+		void main()
+		{
+			gl_Position = vec4( pos, 0, 1 );
+		}
+
+	</script>
+
+	<script type="x-shader/x-fragment" id="fs-src">
+
+		void main()
+		{
+			gl_FragColor = vec4( 0, 0, 1, 1 );
+		}
+
+	</script>
+
+	<script type="text/javascript">
+
+		(function (global){
+			
+			"use strict";
+
+			var gl, program, buffer;
+
+			function init()
+			{
+				var canvas = document.getElementById( "canvas" );	
+				gl = canvas.getContext( "webgl" );
+				gl.clearColor( 0, 0, 0, 1 );
+
+				makeBuffer();
+				makeProgram();
+
+				draw();
+			};
+
+			function draw()
+			{
+				gl.clear( gl.COLOR_BUFFER_BIT );
+				gl.bindBuffer( gl.ARRAY_BUFFER, buffer );
+
+				var pos = gl.getAttribLocation( program, "pos" );
+
+				gl.enableVertexAttribArray( pos );
+				gl.vertexAttribPointer( pos, 2, gl.FLOAT, false, 4 * 2, 4 * 0 );
+				gl.drawArrays( gl.TRIANGLES, 0, 3 );
+			};
+
+			function makeBuffer()
+			{
+				buffer = gl.createBuffer();
+
+				var n = 0.1;
+				var vertices = [
+					0, n,
+					n, -n,
+					-n, -n,
+				];
+
+				var buf = new Float32Array( vertices );
+
+				gl.bindBuffer( gl.ARRAY_BUFFER, buffer );
+				gl.bufferData( gl.ARRAY_BUFFER, buf, gl.STATIC_DRAW );
+			};
+
+			function makeProgram()
+			{
+				program = gl.createProgram();
+
+				var vssrc = document.getElementById( "vs-src" ).innerHTML;
+				var fssrc = document.getElementById( "fs-src" ).innerHTML;
+
+				gl.attachShader( program, makeShader( gl.VERTEX_SHADER, vssrc ) );
+				gl.attachShader( program, makeShader( gl.FRAGMENT_SHADER, fssrc ) );
+
+				gl.linkProgram( program );
+
+				if( !gl.getProgramParameter( program, gl.LINK_STATUS ))
+				{
+					throw new Error( gl.getProgramInfoLog( program ) );
+				}
+
+				gl.useProgram( program );
+			};
+
+			function makeShader( type, src )
+			{
+				var shader = gl.createShader( type );
+
+				gl.shaderSource( shader, src );
+				gl.compileShader( shader );
+
+				if( !gl.getShaderParameter( shader, gl.COMPILE_STATUS ) )
+				{
+					throw new Error( gl.getShaderInfoLog( shader) );
+				}
+
+				return shader;
+			};
+
+			global.onload = init;
+
+		})(this);
+
+	</script>
+</head>
+<body>
+	<div class="wrapper">
+		<div class="header">
+			<h3 class="title">draw triangle</h3>
+		</div>
+		<div class="content">
+			<canvas id="canvas" width="400" height="300"></canvas>
+		</div>
+	</div>
+</body>
+</html>
