@@ -1,3 +1,3 @@
-# webgl_study
+# WebGL Study
 
 HTML5 WebGL Study
