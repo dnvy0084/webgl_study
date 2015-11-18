@@ -81,6 +81,8 @@
 
     p.start = function () {
 
+        document.getElementById( "title").innerHTML = "draw triangle with glDrawArrays";
+
         gl = document.getElementById( "canvas").getContext( "webgl" );
         gl.clearColor( 0,0,0,1 );
 
@@ -185,7 +187,7 @@
 
     p.start = function () {
 
-        gl = document.getElementsById( "canvas").getContext( "webgl" );
+        gl = document.getElementById( "canvas").getContext( "webgl" );
 
         this.makeBuffer();
     };

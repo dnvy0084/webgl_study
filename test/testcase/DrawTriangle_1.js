@@ -13,7 +13,7 @@
 
     p.start = function () {
 
-        gl = document.getElementsById( "canvas").getContext( "webgl" );
+        gl = document.getElementById( "canvas").getContext( "webgl" );
 
         this.makeBuffer();
     };
