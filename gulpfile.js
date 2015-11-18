@@ -6,22 +6,39 @@ var watch = require( "gulp-watch" );
 var del = require( "del" );
 
 var paths = {
-    src: [ "src/**/*.js", "test/**/*.js" ]
+    src: [
+        "src/namespaces.js",
+        "src/**/*.js",
+        "test/testcase/BaseCase.js",
+        "test/**/!(testmain)*.js",
+        "test/testmain.js"
+    ],
+    shaders: [ "shaders/**/*.cpp" ]
 };
 
 gulp.task( "del", function(){
    return del( [ "build/js" ] );
 });
 
+gulp.task( "del_shader", function(){
+    return del( ["build/shader"] );
+});
+
+gulp.task( "move", ["del_shader"], function(){
+    gulp.src( paths.shaders )
+        .pipe( gulp.dest( "build/shader" ) );
+});
+
 gulp.task( "build", ["del"], function(){
 
     gulp.src( paths.src)
-        .pipe( concat( "build.all.js") )
+        .pipe( concat( "build.all.js" ) )
         .pipe( gulp.dest( "build/js" ) );
 });
 
 gulp.task( "watch", function(){
-   gulp.watch( paths.src, ["build"] );
+    gulp.watch( paths.src, ["build"] );
+    gulp.watch( paths.shaders, ["move"] );
 });
 
 gulp.task( "default", [ "build" ] );
