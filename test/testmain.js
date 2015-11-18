@@ -29,7 +29,7 @@
     }
 
     function onChange(e) {
-        startCase( e.target.getElementByTagName( "option" )[e.target.selectedIndex] );
+        startCase( testcase[ e.target.selectedOptions[0].value ] );
     }
 
     function clearCase() {
