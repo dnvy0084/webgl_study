@@ -11,7 +11,7 @@
 
     function makeList() {
 
-        var currentCase = testcase.DrawTriangle_0;
+        var currentCase = testcase.DrawTriangle_1;
         var list = document.getElementById( "list" );
 
         for( var s in testcase ){
