@@ -1,3 +1,8 @@
+
+/****************
+ * DrawTriangle_1.js
+ *****************/
+
 (function () {
 
     "use strict";
@@ -23,6 +28,11 @@
     };
 
     p.clear = function () {
+
+        gl.clear( gl.COLOR_BUFFER_BIT );
+        gl.deleteBuffer( this.vertexBuffer );
+        gl.deleteBuffer( this.indexBuffer );
+        gl.deleteProgram( this.program );
     };
 
     p.draw = function () {

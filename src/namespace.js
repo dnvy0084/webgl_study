@@ -1,3 +1,8 @@
+
+/****************
+ * namespace.js
+ *****************/
+
 (function ( global ) {
 
     "use strict";

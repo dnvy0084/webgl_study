@@ -1,3 +1,8 @@
+
+/****************
+ * testmain.js
+ *****************/
+
 (function () {
 
     "use strict";
@@ -11,7 +16,7 @@
 
     function makeList() {
 
-        var currentCase = testcase.DrawTriangle_1;
+        var currentCase = testcase.ConvertPosWithVertexShader;
         var list = document.getElementById( "list" );
 
         for( var s in testcase ){
