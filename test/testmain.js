@@ -16,7 +16,7 @@
 
     function makeList() {
 
-        var currentCase = testcase.ConvertPosWithVertexShader;
+        var currentCase = testcase.Transform2D;
         var list = document.getElementById( "list" );
 
         for( var s in testcase ){

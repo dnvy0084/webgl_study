@@ -13,6 +13,7 @@
         var program = gl.createProgram();
 
         util.loadItems( remoteSources, function(responses){
+
             gl.attachShader( program, util.createShader(gl, gl.VERTEX_SHADER, responses[0] ) );
             gl.attachShader( program, util.createShader(gl, gl.FRAGMENT_SHADER, responses[1] ) );
             gl.linkProgram( program );
@@ -23,6 +24,8 @@
             onComplete( program );
         });
     }
+
+    util.createProgram = createProgram;
 
 })();
 

@@ -48,6 +48,14 @@
 
     p.clear = function () {
 
+        gl.clear( gl.COLOR_BUFFER_BIT );
+
+        for (var i = 0; i < this.rects.length; i++) {
+            gl.deleteBuffer( this.rects[i].vertexBuffer );
+            gl.deleteBuffer( this.rects[i].indexBuffer );
+        }
+
+        gl.deleteProgram( this.program );
     };
 
 

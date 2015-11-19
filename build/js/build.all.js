@@ -55,6 +55,101 @@
     global.glbasic = usenamespace( global.glbasic || {} );
 
 })( typeof window === "undefined" ? this : window );
+/****************
+ * createProgram.js
+ *****************/
+
+(function () {
+
+    "use strict";
+
+    var util = glbasic.import("util");
+
+    function createProgram( gl, remoteSources, onComplete ) {
+
+        var program = gl.createProgram();
+
+        util.loadItems( remoteSources, function(responses){
+
+            gl.attachShader( program, util.createShader(gl, gl.VERTEX_SHADER, responses[0] ) );
+            gl.attachShader( program, util.createShader(gl, gl.FRAGMENT_SHADER, responses[1] ) );
+            gl.linkProgram( program );
+
+            if( gl.getProgramParameter(program, gl.LINK_STATUS) == false )
+                throw new Error( "LINK_ERROR > " + gl.getProgramInfoLog(program) );
+
+            onComplete( program );
+        });
+    }
+
+    util.createProgram = createProgram;
+
+})();
+
+
+
+/****************
+ * createShader.js
+ *****************/
+
+(function () {
+
+    "use strict";
+
+    var util = glbasic.import("util");
+
+    function createShader( gl, type, source ) {
+
+        var shader = gl.createShader( type );
+
+        gl.shaderSource( shader, source );
+        gl.compileShader( shader );
+
+        if( gl.getShaderParameter( shader, gl.COMPILE_STATUS ) == false )
+            throw new Error( "Compile Error > " + gl.getShaderInfoLog( shader ) );
+
+        return shader;
+    }
+
+    util.createShader = createShader;
+
+})();
+/****************
+ * loadItems.js
+ *****************/
+
+(function () {
+
+    "use strict";
+
+    var util = glbasic.import("util");
+
+    function loadItems( items, onComplete, onFail ) {
+
+        var xhr, response = [];
+
+        for (var i = 0, n = 0, l = items.length; i < l; i++) {
+            xhr = new XMLHttpRequest();
+            xhr.index = i;
+            xhr.open( "GET", items[i]);
+            xhr.send();
+
+            xhr.onload = function(e){
+
+                if( e.target.readyState != 4 ) return;
+
+                response[e.target.index] = e.target.response;
+
+                if( ++n == l ) onComplete( response );
+            }
+        }
+    }
+
+    util.loadItems = loadItems;
+
+})();
+
+
 
 /****************
  * BaseCase.js
@@ -85,6 +180,97 @@
     }
 
     testcase.BaseCase = BaseCase;
+
+})();
+
+/****************
+ * testmain.js
+ *****************/
+
+(function () {
+
+    "use strict";
+
+    var testcase = test.import("testcase");
+    var current = null;
+
+    function init() {
+        makeList();
+    }
+
+    function makeList() {
+
+        var currentCase = testcase.Transform2D;
+        var list = document.getElementById( "list" );
+
+        for( var s in testcase ){
+            if( s == "BaseCase" ) continue;
+
+            var opt = document.createElement("option");
+            opt.value = s;
+            opt.innerHTML = s;
+
+            list.appendChild( opt );
+        }
+
+        list.addEventListener( "change", onChange );
+        startCase( currentCase );
+    }
+
+    function onChange(e) {
+        startCase( testcase[ e.target.selectedOptions[0].value ] );
+    }
+
+    function clearCase() {
+        if( current == null ) return;
+
+        current.clear();
+    }
+
+    function startCase( item ) {
+
+        clearCase();
+        current = new item();
+        current.start();
+    }
+
+    window.onload = init;
+
+})();
+/**
+ * Created by dnvy0084 on 2015. 11. 19..
+ */
+
+(function () {
+
+    "use strict";
+
+    var dis = test.import("display");
+
+    function Rect( w, h ) {
+
+        Object.defineProperties( this, {
+            "x": {
+                get: function () {
+                    return this._x;
+                },
+                set: function (value) {
+                    this._x = value;
+                }
+            },
+        });
+    }
+
+    Rect.prototype = {
+        
+        constructor: Rect,
+
+        init: function () {
+            
+        },
+    };
+
+    dis.Rect = Rect;
 
 })();
 
@@ -137,6 +323,14 @@
 
     p.clear = function () {
 
+        gl.clear( gl.COLOR_BUFFER_BIT );
+
+        for (var i = 0; i < this.rects.length; i++) {
+            gl.deleteBuffer( this.rects[i].vertexBuffer );
+            gl.deleteBuffer( this.rects[i].indexBuffer );
+        }
+
+        gl.deleteProgram( this.program );
     };
 
 
@@ -449,149 +643,136 @@
     c.DrawTriangle_1 = DrawTriangle_1;
 
 })();
-
-/****************
- * testmain.js
- *****************/
+/**
+ * Created by dnvy0084 on 2015. 11. 19..
+ */
 
 (function () {
 
     "use strict";
 
-    var testcase = test.import("testcase");
-    var current = null;
+    var c = test.import("testcase");
+    var util = glbasic.import("util");
 
-    function init() {
-        makeList();
+    var gl;
+
+    function Transform2D() {
+        
     }
 
-    function makeList() {
+    var p = test.extends( Transform2D, c.BaseCase );
 
-        var currentCase = testcase.ConvertPosWithVertexShader;
-        var list = document.getElementById( "list" );
+    p.start = function () {
 
-        for( var s in testcase ){
-            if( s == "BaseCase" ) continue;
+        gl = document.getElementById( "canvas").getContext( "webgl" );
+        gl.clearColor( 0,0,0,1 );
 
-            var opt = document.createElement("option");
-            opt.value = s;
-            opt.innerHTML = s;
+        util.createProgram(
+            gl,
+            [ "shader/VS-Transform2D.cpp", "shader/FS-Transform2D.cpp"],
+            (function(program){
 
-            list.appendChild( opt );
+                gl.useProgram( program );
+                this.program = program;
+
+                this.layout();
+                this.draw();
+
+            }).bind(this)
+        );
+    };
+
+    p.clear = function () {
+        console.log( "clear", this.constructor.name );
+    };
+
+    p.layout = function () {
+
+        this.indices = gl.createBuffer();
+
+        var indices = new Uint16Array([
+            0,1,2,  0,2,3
+        ]);
+
+        gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, this.indices );
+        gl.bufferData( gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW );
+
+        this.rects = [];
+
+        for (var i = 0; i < 1; i++) {
+            this.rects.push( this.makeRect( 100, 100 ) );
         }
+    };
 
-        list.addEventListener( "change", onChange );
-        startCase( currentCase );
-    }
+    p.draw = function () {
+        gl.clear( gl.COLOR_BUFFER_BIT );
 
-    function onChange(e) {
-        startCase( testcase[ e.target.selectedOptions[0].value ] );
-    }
+        var r;
 
-    function clearCase() {
-        if( current == null ) return;
+        var pos = gl.getAttribLocation( this.program, "pos" );
+        gl.enableVertexAttribArray( pos );
 
-        current.clear();
-    }
+        var t = gl.getUniformLocation( this.program, "transform" );
 
-    function startCase( item ) {
+        var stage = gl.getUniformLocation( this.program, "stage" );
+        gl.uniform2f( stage, gl.canvas.width, gl.canvas.height );
 
-        clearCase();
-        current = new item();
-        current.start();
-    }
+        var color = gl.getUniformLocation( this.program, "color" );
+        gl.uniform3f( color, 1,0,0 );
 
-    window.onload = init;
+        for (var i = 0, l = this.rects.length; i < l; i++) {
+            r = this.rects[i];
+            gl.bindBuffer( gl.ARRAY_BUFFER, r.buffer);
+            gl.vertexAttribPointer( pos, 2, gl.FLOAT, false, 4 * 2, 4 * 0 );
 
-})();
-/****************
- * createProgram.js
- *****************/
+            this.translate(r.mat, 100, 50 );
 
-(function () {
+            gl.uniformMatrix4fv( t, false, r.mat );
+            gl.drawElements( gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0 );
 
-    "use strict";
-
-    var util = glbasic.import("util");
-
-    function createProgram( gl, remoteSources, onComplete ) {
-
-        var program = gl.createProgram();
-
-        util.loadItems( remoteSources, function(responses){
-            gl.attachShader( program, util.createShader(gl, gl.VERTEX_SHADER, responses[0] ) );
-            gl.attachShader( program, util.createShader(gl, gl.FRAGMENT_SHADER, responses[1] ) );
-            gl.linkProgram( program );
-
-            if( gl.getProgramParameter(program, gl.LINK_STATUS) == false )
-                throw new Error( "LINK_ERROR > " + gl.getProgramInfoLog(program) );
-
-            onComplete( program );
-        });
-    }
-
-})();
-
-
-
-/****************
- * createShader.js
- *****************/
-
-(function () {
-
-    "use strict";
-
-    var util = glbasic.import("util");
-
-    function createShader( gl, type, source ) {
-
-        var shader = gl.createShader( type );
-
-        gl.shaderSource( shader, source );
-        gl.compileShader( shader );
-
-        if( gl.getShaderParameter( shader, gl.COMPILE_STATUS ) == false )
-            throw new Error( "Compile Error > " + gl.getShaderInfoLog( shader ) );
-
-        return shader;
-    }
-
-    util.createShader = createShader;
-
-})();
-/****************
- * loadItems.js
- *****************/
-
-(function () {
-
-    "use strict";
-
-    var util = glbasic.import("util");
-
-    function loadItems( items, onComplete, onFail ) {
-
-        var xhr, response = [];
-
-        for (var i = 0, n = 0, l = items.length; i < l; i++) {
-            xhr = new XMLHttpRequest();
-            xhr.index = i;
-            xhr.open( "GET", items[i]);
-            xhr.send();
-
-            xhr.onload = function(e){
-
-                if( e.target.readyState != 4 ) return;
-
-                response[e.target.index] = e.target.response;
-
-                if( ++n == l ) onComplete( response );
-            }
+            console.log(r.mat);
         }
-    }
+    };
 
-    util.loadItems = loadItems;
+    p.makeRect = function ( w, h ) {
+
+        var r = { x: 0, y: 0 };
+
+        var ax = 0, ay = 0,
+            bx = w, by = h;
+
+        var vertices = new Float32Array([
+            ax, ay,
+            bx, ay,
+            bx, by,
+            ax, by
+        ]);
+
+        r.mat = new Float32Array(16);
+        this.identity(r.mat);
+
+        r.buffer = gl.createBuffer();
+
+        gl.bindBuffer( gl.ARRAY_BUFFER, r.buffer );
+        gl.bufferData( gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW );
+
+        return r;
+    };
+
+    p.identity = function ( mat ) {
+        mat[0] = 1, mat[4] = 0, mat[8] = 0, mat[12] = 0,
+        mat[1] = 0, mat[5] = 1, mat[9] = 0, mat[13] = 0,
+        mat[2] = 0, mat[6] = 0, mat[10] = 1, mat[14] = 0,
+        mat[3] = 0, mat[7] = 0, mat[11] = 0, mat[15] = 1;
+    };
+
+    p.translate = function (mat,x,y) {
+        mat[0] = 1, mat[4] = 0, mat[8] = 0, mat[12] += x,
+        mat[1] = 0, mat[5] = 1, mat[9] = 0, mat[13] += y,
+        mat[2] = 0, mat[6] = 0, mat[10] = 1, mat[14] = 0,
+        mat[3] = 0, mat[7] = 0, mat[11] = 0, mat[15] = 1;
+    };
+
+    c.Transform2D = Transform2D;
 
 })();
-

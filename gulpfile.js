@@ -8,7 +8,10 @@ var del = require( "del" );
 
 var paths = {
     src: [
+        "src/namespace.js",
+        "src/srcmain.js",
         "src/**/*.js",
+        "test/testcase/BaseCase.js",
         "test/**/*.js",
     ],
     shaders: [ "shaders/**/*.cpp" ]
@@ -30,14 +33,6 @@ gulp.task( "move", ["del_shader"], function(){
 gulp.task( "build", ["del"], function(){
 
     gulp.src( paths.src )
-        .pipe( order([
-            "src/namespaces.js",
-            "src/srcmain.js",
-            "src/**/*.js",
-            "test/testcase/BaseCase.js",
-            "test/**/!(testmain)*.js",
-            "test/testmain.js"
-        ]))
         .pipe( concat( "build.all.js" ) )
         .pipe( gulp.dest( "build/js" ) );
 });
