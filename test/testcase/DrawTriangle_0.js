@@ -42,6 +42,7 @@
         gl.bindBuffer( gl.ARRAY_BUFFER, this.buffer );
 
         var pos = gl.getAttribLocation( this.program, "pos" );
+
         gl.enableVertexAttribArray( pos );
         gl.vertexAttribPointer( pos, 2, gl.FLOAT, false, 4 * 2, 4 * 0 );
         gl.drawArrays( gl.TRIANGLES, 0, 3 );

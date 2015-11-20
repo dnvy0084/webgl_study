@@ -47,10 +47,18 @@
             this.rects[i].dispose();
         }
 
+        var pos = gl.getAttribLocation( this.program, "pos" );
+        gl.disableVertexAttribArray( pos );
+
+        var col = gl.getAttribLocation( this.program, "col" );
+        gl.disableVertexAttribArray( col );
+
         gl.deleteBuffer( this.indices );
         gl.deleteProgram( this.program );
 
         webkitCancelRequestAnimationFrame( this.id );
+
+        console.log( "clear" );
     };
 
     p.layout = function () {
