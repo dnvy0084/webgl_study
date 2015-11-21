@@ -55,6 +55,290 @@
     global.glbasic = usenamespace( global.glbasic || {} );
 
 })( typeof window === "undefined" ? this : window );
+/**
+ * Created by dnvy0084 on 2015. 11. 21..
+ */
+
+(function () {
+
+    "use strict";
+
+    var display = glbasic.import("display");
+    var geom = glbasic.import("geom");
+
+    display.RAD = 1 * 180 / Math.PI;
+    display.ANG = 1 * Math.PI / 180;
+
+    function DisplayObject( w, h, gl ) {
+
+        this._x = 0;
+        this._y = 0;
+        this._scaleX = 1;
+        this._scaleY = 1;
+        this._radian = 0;
+        this._anchorX = 0;
+        this._anchorY = 0;
+
+        this._transform = new geom.Matrix3D();
+
+        this._transformChanged = true;
+
+        Object.defineProperties( this, {
+
+            "x": {
+                get: function () {
+                    return this._x;
+                },
+                set: function (value) {
+                    if(this._x == value ) return;
+
+                    this._x = value;
+                    this._transformChanged = true;
+                }
+            },
+
+            "y": {
+                get: function () {
+                    return this._y;
+                },
+                set: function (value) {
+                    if(this._y == value ) return;
+
+                    this._y = value;
+                    this._transformChanged = true;
+                }
+            },
+
+            "scaleX": {
+                get: function () {
+                    return this._scaleX;
+                },
+                set: function (value) {
+                    if(this._scaleX == value ) return;
+
+                    this._scaleX = value;
+                    this._transformChanged = true;
+                }
+            },
+
+            "scaleY": {
+                get: function () {
+                    return this._scaleY;
+                },
+                set: function (value) {
+                    if(this._scaleY == value ) return;
+                    this._scaleY = value;
+
+                    this._transformChanged = true;
+                }
+            },
+
+            "rotation": {
+                get: function () {
+                    return this._radian * display.ANG;
+                },
+                set: function (value) {
+                    this.radian = value * display.RAD;
+                }
+            },
+
+            "radian": {
+                get: function () {
+                    return this._radian;
+                },
+                set: function (value) {
+                    if(value == this._radian) return;
+
+                    this._radian = value;
+                    this._transformChanged = true;
+                }
+            },
+
+            "anchorX": {
+                get: function () {
+                    return this._anchorX;
+                },
+                set: function (value) {
+                    if(this._anchorX == value ) return;
+
+                    this._anchorX = value;
+                    this._transformChanged = true;
+                }
+            },
+
+            "anchorY": {
+                get: function () {
+                    return this._anchorY;
+                },
+                set: function (value) {
+                    if(this._anchorY == value) return;
+
+                    this._anchorY = value;
+                    this._transformChanged = true;
+                }
+            },
+
+            "transform": {
+                get: function () {
+                    if( this._transformChanged )
+                    {
+                        var a, b, c, d, tx, ty;
+
+                        if(this._radian == 0)
+                        {
+                            a = this._scaleX;
+                            b = 0;
+                            c = 0;
+                            d = this._scaleY;
+                            tx = this._x;
+                            ty = this._y;
+                        }
+                        else
+                        {
+
+                        }
+
+                        this._transform.setTo(
+                            a, c, 0, tx,
+                            b, d, 0, ty,
+                            0, 0, 1, 0,
+                            0, 0, 0, 1
+                        );
+                    }
+
+                    return this._transform;
+                }
+            },
+        });
+
+        this.gl = gl;
+        this.setGeometry( w, h );
+    }
+
+    DisplayObject.prototype = {
+
+        constructor: DisplayObject,
+
+        setGeometry: function ( w, h ) {
+
+            this.buffer = this.gl.createBuffer();
+            this.gl.bindBuffer( this.gl.ARRAY_BUFFER, this.buffer );
+
+            var buf = new Float32Array([
+                0, 0, 0, 0,
+                w, 0, 1, 0,
+                w, h, 1, 1,
+                0, h, 0, 1
+            ]);
+
+            this.gl.bufferData( this.gl.ARRAY_BUFFER, buf, this.gl.STATIC_DRAW );
+        },
+    };
+
+    display.DisplayObject = DisplayObject;
+
+})();
+/**
+ * Created by dnvy0084 on 2015. 11. 21..
+ */
+
+(function () {
+
+    "use strict";
+
+    var geom = glbasic.import("geom");
+
+    function Matrix3D() {
+
+        Object.defineProperties( this, {
+            "raw": {
+                get: function () {
+                    return this._raw;
+                }
+            },
+        });
+
+        this._raw = new Float32Array(16);
+        this.identity();
+    }
+
+    Matrix3D.prototype = {
+        constructor: Matrix3D,
+
+        setTo: function (
+            m11, m12, m13, m14,
+            m21, m22, m23, m24,
+            m31, m32, m33, m34,
+            m41, m42, m43, m44
+        ){
+            var m = this._raw;
+
+            m[0] = m11, m[4] = m12, m[8 ] = m13, m[12] = m14,
+            m[1] = m21, m[5] = m22, m[9 ] = m23, m[13] = m24,
+            m[2] = m31, m[6] = m32, m[10] = m33, m[14] = m34,
+            m[3] = m41, m[7] = m42, m[11] = m43, m[15] = m44;
+        },
+
+        identity: function () {
+            this.setTo(
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            );
+        },
+
+        /**
+         * this = b * this
+         * @param b
+         */
+        preppend: function (b) {
+            var m = b._raw;
+
+            var a11 = m[0], a12 = m[4], a13 = m[8 ], a14 = m[12],
+                a21 = m[1], a22 = m[5], a23 = m[9 ], a24 = m[13],
+                a31 = m[2], a32 = m[6], a33 = m[10], a34 = m[14],
+                a41 = m[3], a42 = m[7], a43 = m[11], a44 = m[15];
+
+            m = this._raw;
+
+            var b11 = m[0], b12 = m[4], b13 = m[8 ], b14 = m[12],
+                b21 = m[1], b22 = m[5], b23 = m[9 ], b24 = m[13],
+                b31 = m[2], b32 = m[6], b33 = m[10], b34 = m[14],
+                b41 = m[3], b42 = m[7], b43 = m[11], b44 = m[15];
+
+            var c11 = a11 * b11 + a12 * b21 + a13 * b31 + a14 * b41,
+                c12 = a11 * b12 + a12 * b22 + a13 * b32 + a14 * b42,
+                c13 = a11 * b13 + a12 * b23 + a13 * b33 + a14 * b43,
+                c14 = a11 * b14 + a12 * b24 + a13 * b34 + a14 * b44,
+
+                c21 = a21 * b11 + a22 * b21 + a23 * b31 + a24 * b41,
+                c22 = a21 * b12 + a22 * b22 + a23 * b32 + a24 * b42,
+                c23 = a21 * b13 + a22 * b23 + a23 * b33 + a24 * b43,
+                c24 = a21 * b14 + a22 * b24 + a23 * b34 + a24 * b44,
+
+                c31 = a31 * b11 + a32 * b21 + a33 * b31 + a44 * b41,
+                c32 = a31 * b12 + a32 * b22 + a33 * b32 + a44 * b42,
+                c33 = a31 * b13 + a32 * b23 + a33 * b33 + a44 * b43,
+                c34 = a31 * b14 + a32 * b24 + a33 * b34 + a44 * b44,
+
+                c41 = a41 * b11 + a42 * b21 + a43 * b31 + a44 * b41,
+                c42 = a41 * b12 + a42 * b22 + a43 * b32 + a44 * b42,
+                c43 = a41 * b13 + a42 * b23 + a43 * b33 + a44 * b43,
+                c44 = a41 * b14 + a42 * b24 + a43 * b34 + a44 * b44;
+
+            this.setTo(
+                c11, c12, c13, c14,
+                c21, c22, c23, c24,
+                c31, c32, c33, c34,
+                c41, c42, c43, c44
+            );
+        },
+    };
+
+    geom.Matrix3D = Matrix3D;
+
+})();
 /****************
  * createProgram.js
  *****************/
@@ -200,7 +484,7 @@
 
     function makeList() {
 
-        var currentCase = testcase.TextureSample;
+        var currentCase = testcase.ImageProcessing;
         var list = document.getElementById( "list" );
 
         for( var s in testcase ){
@@ -644,6 +928,125 @@
     c.DrawTriangle_1 = DrawTriangle_1;
 
 })();
+/**
+ * Created by dnvy0084 on 2015. 11. 21..
+ */
+
+(function () {
+
+    "use strict";
+
+    var c = test.import("testcase");
+    var util = glbasic.import("util");
+    var display = glbasic.import("display");
+    var DisplayObject = display.DisplayObject;
+
+    var gl;
+
+    function ImageProcessing() {
+
+    }
+
+    var p = glbasic.extends( ImageProcessing, c.BaseCase );
+
+    p.start = function () {
+
+        document.getElementById( "title").innerHTML = "image processing sample";
+        gl = document.getElementById( "canvas").getContext( "webgl" );
+        gl.clearColor( 0,0,0,1 );
+
+        util.createProgram( gl, [ "shader/VS-ImageProcessing.cpp", "shader/FS-ImageProcessing.cpp"], (function(p){
+            this.initProgram(p);
+        }).bind(this));
+    };
+
+    p.clear = function () {
+        console.log( "clear", this.constructor.name );
+    };
+
+    p.initProgram = function (p) {
+        this.program = p;
+
+        this.program.pos = gl.getAttribLocation( this.program, "pos" );
+        this.program.uv = gl.getAttribLocation( this.program, "uv" );
+
+        gl.enableVertexAttribArray( this.program.pos );
+        gl.enableVertexAttribArray( this.program.uv );
+
+        this.program.mat = gl.getUniformLocation( this.program, "mat" );
+        this.program.stage = gl.getUniformLocation( this.program, "stage" );
+
+        gl.useProgram(p);
+        gl.uniform2f( this.program.stage, gl.canvas.width, gl.canvas.height );
+
+        this.initTexture();
+    };
+
+    p.initTexture = function () {
+
+        var img = document.createElement( "img" );
+        img.src = "img/a.jpg";
+        img.style.position = "absolute";
+        img.style.left = "100000px";
+
+        img.onload = (function(){
+
+            document.body.appendChild(img);
+            this.tex = gl.createTexture();
+
+            gl.bindTexture( gl.TEXTURE_2D, this.tex );
+
+            gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
+            gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE );
+            gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST );
+            gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST );
+
+            gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img );
+
+            var scale = 300 / img.clientHeight;
+
+            this.layout( img.clientWidth * scale, img.clientHeight * scale );
+
+        }).bind(this);
+    };
+
+    p.layout = function ( w, h ) {
+
+        this.indices = gl.createBuffer();
+
+        var buf = new Uint16Array([
+            0,1,2, 0,2,3
+        ]);
+
+        gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, this.indices );
+        gl.bufferData( gl.ELEMENT_ARRAY_BUFFER, buf, gl.STATIC_DRAW);
+
+        this.picture = new DisplayObject( w, h, gl );
+        this.picture.x = ( gl.canvas.width - w ) / 2;
+        this.onRender = this.draw.bind( this );
+
+        this.draw();
+    };
+
+    p.draw = function () {
+
+        gl.clear( gl.COLOR_BUFFER_BIT );
+
+        gl.bindBuffer( gl.ARRAY_BUFFER, this.picture.buffer );
+
+        gl.vertexAttribPointer( this.program.pos, 2, gl.FLOAT, false, 4 * 4, 4 * 0 );
+        gl.vertexAttribPointer( this.program.uv, 2, gl.FLOAT, false, 4 * 4, 4 * 2 );
+        gl.uniformMatrix4fv( this.program.mat, false, this.picture.transform.raw );
+
+        gl.bindTexture( gl.TEXTURE_2D, this.tex );
+        gl.drawElements( gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0 );
+
+        this.id = requestAnimationFrame( this.onRender );
+    };
+
+    c.ImageProcessing = ImageProcessing;
+
+})();
 /****************
  * TextureSample.js
  *****************/
@@ -665,7 +1068,7 @@
 
     p.start = function () {
 
-        document.getElementById( "title").innerHTML = "basic Texture sample";
+        document.getElementById( "title" ).innerHTML = "basic Texture sample";
         gl = document.getElementById( "canvas").getContext( "webgl" );
 
         util.createProgram(
@@ -682,6 +1085,15 @@
 
     p.clear = function () {
 
+        gl.clear( gl.COLOR_BUFFER_BIT );
+
+        webkitCancelAnimationFrame( this.id );
+
+        this.rect.dispose();
+
+        gl.deleteBuffer( this.indices );
+        gl.deleteTexture( this.tex );
+        this.disposeProgram();
     };
 
     p.initProgram = function () {
@@ -696,6 +1108,32 @@
 
         this.program.mat = gl.getUniformLocation( this.program, "mat" );
         this.program.stage = gl.getUniformLocation( this.program, "stage" );
+        this.program.image = gl.getUniformLocation( this.program, "image" );
+    };
+
+    p.disposeProgram = function () {
+        gl.disableVertexAttribArray( this.program.pos );
+        gl.disableVertexAttribArray( this.program.uv );
+
+        gl.deleteProgram( this.program );
+    };
+
+    p.draw = function () {
+
+        gl.clear(gl.COLOR_BUFFER_BIT);
+
+        gl.bindBuffer( gl.ARRAY_BUFFER, this.rect.buffer );
+
+        gl.vertexAttribPointer( this.program.pos, 2, gl.FLOAT, false, 4 * 4, 0 );
+        gl.vertexAttribPointer( this.program.uv, 2, gl.FLOAT, false, 4 * 4, 4 * 2 );
+
+        gl.uniformMatrix4fv( this.program.mat, false, this.rect.transform );
+        gl.uniform2f( this.program.stage, gl.canvas.width, gl.canvas.height );
+
+        gl.drawElements( gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0 );
+
+
+        this.id = requestAnimationFrame( this.onRender );
     };
 
     p.layout = function () {
@@ -706,16 +1144,47 @@
             document.body.appendChild( this.img );
 
             this.makeTexture( this.img );
+            this.addImage();
         }).bind(this);
 
         this.img.src = "img/a.jpg";
+
+        this.indices = gl.createBuffer();
+
+        var buf = new Uint16Array([
+            0, 1, 2,    0, 2, 3
+        ]);
+
+        gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, this.indices );
+        gl.bufferData( gl.ELEMENT_ARRAY_BUFFER, buf, gl.STATIC_DRAW );
     };
+
+    p.addImage = function () {
+
+        var scale = 280 / this.img.clientHeight;
+
+        this.rect = this.makeRect( this.img.clientWidth * scale, this.img.clientHeight * scale );
+
+        this.rect.x = (gl.canvas.width - this.rect.width ) / 2;
+        this.rect.y = 10;
+        this.rect.anchorX = this.rect.anchorY = 0;
+
+        this.onRender = this.draw.bind(this);
+        this.draw();
+    };
+
+
 
     p.makeTexture = function ( img ) {
 
         this.tex = gl.createTexture();
 
         gl.bindTexture( gl.TEXTURE_2D, this.tex );
+
+        gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
+        gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE );
+        gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR );
+        gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
 
         gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img );
     };
@@ -741,16 +1210,26 @@
             }
         };
 
+        var self = this;
+
+        Object.defineProperty( r, "transform", {
+            get: function(){
+
+                return self.getMatrix(this);
+            }
+        });
+
         r.color = new Float32Array([ Math.random(), Math.random(), Math.random() ]);
 
         var ax = 0, ay = 0,
-            bx = w, by = h;
+            bx = w, by = h,
+            u = 1, v = 1;
 
         var vertices = new Float32Array([
             ax, ay, 0, 0,
-            bx, ay, 1, 0,
-            bx, by, 1, 1,
-            ax, by, 0, 1,
+            bx, ay, u, 0,
+            bx, by, u, v,
+            ax, by, 0, v,
         ]);
 
         r.mat = new Float32Array(16);
@@ -799,6 +1278,8 @@
         mat[1] = b,    mat[5] = d,    mat[9] = 0,     mat[13] = ty,
         mat[2] = 0,    mat[6] = 0,    mat[10] = 1,    mat[14] = 0,
         mat[3] = 0,    mat[7] = 0,    mat[11] = 0,    mat[15] = 1;
+
+        return mat;
     };
 
     p.identity = function ( mat ) {
