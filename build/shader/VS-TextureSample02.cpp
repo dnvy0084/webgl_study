@@ -2,8 +2,8 @@
 attribute vec2 pos;
 attribute vec2 uv;
 
-uniform mat4 mat;
 uniform vec2 stage;
+uniform mat4 mat;
 
 varying vec2 frag_uv;
 

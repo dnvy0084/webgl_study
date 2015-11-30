@@ -83,7 +83,6 @@
 
         gl.drawElements( gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0 );
 
-
         this.id = requestAnimationFrame( this.onRender );
     };
 
