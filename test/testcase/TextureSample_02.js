@@ -122,6 +122,8 @@
         }
 
         $( ".footer" )[0].appendChild( container );
+
+        
     };
 
     p.initProgram = function (p) {

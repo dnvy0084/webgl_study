@@ -1,0 +1,13 @@
+{
+	"folders":
+	[
+		{
+			"path": "."
+		}
+	],
+	"ternjs":{
+		"exclude": [
+			"./node_modules/**"
+		]
+	}
+}

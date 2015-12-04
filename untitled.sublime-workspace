@@ -1,0 +1,514 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"sele",
+				"selected"
+			],
+			[
+				"selec",
+				"selectedFillStyle"
+			],
+			[
+				"__def",
+				"__defineSetter__"
+			],
+			[
+				"child",
+				"children"
+			],
+			[
+				"grou",
+				"groupName"
+			],
+			[
+				"Dis",
+				"EventDispatcher"
+			],
+			[
+				"rotat",
+				"rotation"
+			],
+			[
+				"cur",
+				"cursor"
+			],
+			[
+				"str",
+				"strokeStyle"
+			],
+			[
+				"len",
+				"length"
+			],
+			[
+				"remove",
+				"removeEventListener"
+			],
+			[
+				"offC",
+				"offContext"
+			],
+			[
+				"fill",
+				"fillStyle"
+			],
+			[
+				"proto",
+				"prototype"
+			],
+			[
+				"onMouse",
+				"onMouseDown"
+			],
+			[
+				"hex",
+				"hexCount"
+			],
+			[
+				"off",
+				"offsetX"
+			],
+			[
+				"offse",
+				"offsetY"
+			],
+			[
+				"ease",
+				"easeIn"
+			],
+			[
+				"re",
+				"reqId"
+			],
+			[
+				"list",
+				"listener"
+			],
+			[
+				"req",
+				"requestAnimationFrame"
+			],
+			[
+				"get",
+				"getElementById"
+			],
+			[
+				"pro",
+				"prototype"
+			],
+			[
+				"chid",
+				"children"
+			],
+			[
+				"show",
+				"showTyping"
+			],
+			[
+				"ty",
+				"typingCount"
+			],
+			[
+				"typ",
+				"typingCount"
+			],
+			[
+				"typing",
+				"typingString"
+			],
+			[
+				"can",
+				"cancelAnimationFrame"
+			],
+			[
+				"inter",
+				"intervalID"
+			],
+			[
+				"interval",
+				"intervalID"
+			],
+			[
+				"bin",
+				"binary_search"
+			],
+			[
+				"deci",
+				"decipher2"
+			],
+			[
+				"de",
+				"decipher2"
+			],
+			[
+				"String",
+				"stringProb"
+			],
+			[
+				"string",
+				"stringProb"
+			],
+			[
+				"removeUp",
+				"removeUpto2"
+			],
+			[
+				"canva",
+				"canvas-3d"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "Packages/User/Chrome_Preview.sublime-build",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 27.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"pb",
+				"Preferences: Browse Packages"
+			],
+			[
+				"pi",
+				"Package Control: Install Package"
+			],
+			[
+				"intall",
+				"Package Control: Install Package"
+			],
+			[
+				"b",
+				"Preferences: Browse Packages"
+			],
+			[
+				"prc",
+				"SublimeREPL: Python - RUN current file"
+			],
+			[
+				"replprc",
+				"SublimeREPL: Python - RUN current file"
+			],
+			[
+				"hask",
+				"SublimeREPL: Haskell"
+			],
+			[
+				"",
+				"Bookmarks: Select Previous"
+			],
+			[
+				"pin",
+				"Package Control: Install Package"
+			],
+			[
+				"pack",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 467.0
+	},
+	"console":
+	{
+		"height": 187.0,
+		"history":
+		[
+			"for i in range(1,10):  print i",
+			"for i in range(1,10):",
+			"for i in range(1,10): print i",
+			"a",
+			"a = range(1,10);",
+			"range(1,10);",
+			"range(1:10)",
+			"a",
+			"a = 1",
+			"exit",
+			"exit()",
+			"print( sys.version )",
+			"print sys",
+			"sys.version",
+			"sys",
+			"print sys.version",
+			"import sys",
+			"l.reduce",
+			"l = []",
+			"reduce",
+			"fold",
+			"sys.version",
+			"import sys",
+			"help( l )",
+			"dir( l )",
+			"help( l.sort );",
+			"help( l.sort )",
+			"l.sort",
+			"l = []",
+			"int( ( 10 + 11 ) / 2 );",
+			"( 10 + 11 ) / 2;",
+			"l",
+			"ls",
+			"pow( 2, 7 )",
+			"2 ^ 7",
+			"ord( 'a' );",
+			"ord( 'a' _",
+			"str( 255 )",
+			"str( 10 )",
+			"print c + 1;",
+			"c++",
+			"c= 'a';",
+			"n - a / abs( a );",
+			"type( n )",
+			"n = 10;",
+			"a / abs( a );",
+			"a = -2;",
+			"-2 -1",
+			"-2 / -2;",
+			"help( l.append );",
+			"help",
+			"help( l )",
+			"l = [];",
+			"s[2:]",
+			"s[1:]",
+			"s[0:]",
+			"s = \"a\";",
+			"[l[0]] + l[1:];",
+			"l[0] + l[1:];",
+			"l = [1];",
+			"l[1:]",
+			"l = [];",
+			"b2",
+			"b2 = l2 == [];",
+			"b",
+			"b = l == [];",
+			"print l == [];",
+			"l2 = [];",
+			"l = [1,2,3];",
+			"sys.version",
+			"sys",
+			"import sys",
+			"import urllib.request,os; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); open(os.path.join(ipp, pf), 'wb').write(urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ','%20')).read())",
+			"import urllib2,os; pf='Package Control.sublime-package'; ipp = sublime.installed_packages_path(); os.makedirs( ipp ) if not os.path.exists(ipp) else None; urllib2.install_opener( urllib2.build_opener( urllib2.ProxyHandler( ))); open( os.path.join( ipp, pf), 'wb' ).write( urllib2.urlopen( 'http://sublime.wbond.net/' +pf.replace( ' ','%20' )).read()); print( 'Please restart Sublime Text to finish installation')"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+	],
+	"file_history":
+	[
+		"/Users/dnvy0084/Documents/HTML5/DrawTriangle.html",
+		"/Users/dnvy0084/Documents/HTML5/canvas/RIA study/ch10/CanvasStudy/radiobutton/example.js",
+		"/Users/dnvy0084/Documents/HTML5/canvas/RIA study/ch10/CanvasStudy/js/radioButton.js",
+		"/Users/dnvy0084/Documents/HTML5/canvas/RIA study/ch10/CanvasStudy/js/eventDispatcher.js",
+		"/Users/dnvy0084/Documents/HTML5/canvas/RIA study/ch10/CanvasStudy/radiobutton/radiobutton.html",
+		"/Users/dnvy0084/Documents/HTML5/canvas/RIA study/ch10/CanvasStudy/js/scroll.js",
+		"/Users/dnvy0084/Documents/HTML5/canvas/RIA study/ch10/CanvasStudy/scroll/scroll.html",
+		"/Users/dnvy0084/Documents/HTML5/canvas/RIA study/ch10/CanvasStudy/scroll/example.js",
+		"/Users/dnvy0084/Documents/HTML5/canvas/RIA study/ch10/CanvasStudy/roundrect/example.js",
+		"/Users/dnvy0084/Documents/HTML5/canvas/RIA study/ch8/ch8/ch7/main.js",
+		"/Users/dnvy0084/Documents/HTML5/canvas/RIA study/ch8/ch7-master 3/main.js",
+		"/Users/dnvy0084/Documents/HTML5/canvas/RIA study/ch8/ch7-master 2/main.js",
+		"/Users/dnvy0084/Documents/HTML5/canvas/RIA study/ch7/index.html",
+		"/Users/dnvy0084/Documents/HTML5/canvas/RIA study/ch7/main.js",
+		"/Users/dnvy0084/Documents/HTML5/canvas/RIA study/chap07/index.html",
+		"/Users/dnvy0084/Documents/HTML5/canvas/RIA study/chap07/main.js",
+		"/Users/dnvy0084/Library/Application Support/Sublime Text 3/Packages/User/Safari_Preview.sublime-build",
+		"/Users/dnvy0084/Library/Application Support/Sublime Text 3/Packages/User/Chrome_Preview.sublime-build",
+		"/Users/dnvy0084/Documents/HTML5/canvas/RIA study/CoreHTML5Canvas_chapter02/.metadata/.plugins/org.eclipse.debug.core/.launches/Firefox - Internal Server.launch",
+		"/Users/dnvy0084/Documents/HTML5/canvas/RIA study/CoreHTML5Canvas_chapter01/ch02/ex03/linearGradient.html",
+		"/Users/dnvy0084/Documents/HTML5/canvas/RIA study/CoreHTML5Canvas_chapter01/example/LICENSE.txt",
+		"/Users/dnvy0084/Documents/HTML5/canvas/RIA study/CoreHTML5Canvas_chapter02/ch02/ex12-14/lineDraw.html",
+		"/Users/dnvy0084/Documents/HTML5/canvas/RIA study/chap07/ch7/main.js",
+		"/Users/dnvy0084/Documents/HTML5/canvas/RIA study/chap07/ch7/index.html",
+		"/Users/dnvy0084/Documents/HTML5/canvas/RIA study/CoreHTML5Canvas_chapter01/ch01/ex08/glasspane.html",
+		"/Users/dnvy0084/Documents/HTML5/canvas/RIA study/CoreHTML5Canvas_chapter02/ch02/ex12-14/gridDraw.html",
+		"/Users/dnvy0084/Documents/HTML5/canvas/RIA study/chap05/example_09.html",
+		"/Users/dnvy0084/Documents/HTML5/canvas/RIA study/chap05/example_09_Timer.js",
+		"/Users/dnvy0084/Documents/HTML5/canvas/RIA study/chap05/example_08.js",
+		"/Users/dnvy0084/Documents/HTML5/canvas/RIA study/chap05/example_01.html",
+		"/Users/dnvy0084/Documents/HTML5/canvas/RIA study/chap05/example_09_ImageSlider.js",
+		"/Users/dnvy0084/Documents/HTML5/canvas/RIA study/chapter04/sample.html",
+		"/Users/dnvy0084/Documents/temp/hello/hello.c",
+		"/Users/dnvy0084/Documents/temp/hello/src/main.c",
+		"/Users/dnvy0084/Documents/temp/gitDemo/helloGit/heyGit.c",
+		"/Users/dnvy0084/Desktop/Info.plist",
+		"/Users/dnvy0084/Documents/_cloud_workspace/_py/com.algospot/WierdNumber.py",
+		"/Users/dnvy0084/Documents/_cloud_workspace/_py/class.algorithm.nts/hw5.py",
+		"/Users/dnvy0084/Documents/_cloud_workspace/_py/class.algorithm.nts/hw4.py",
+		"/Volumes/downloads/X-Men Days of Future Past 720p HDTS - BLiTZCRiEG/X-Men.Days.Of.Future.Past.2014.720p.HDTS.H264.AAC.2.CH-BLiTZCRiEG.smi",
+		"/Users/dnvy0084/Documents/temp/hello.c",
+		"/Users/dnvy0084/Documents/temp/hello/helloWorld2.c",
+		"/Users/dnvy0084/Desktop/git_sample_proj/binary_search.py",
+		"/Users/dnvy0084/git_sample_proj/binary_search.py",
+		"/Volumes/laon.synology.me/home/CloudStation/_py/class.algorithm.nts/hw4.py",
+		"/Users/dnvy0084/Documents/_cloud_workspace/_py/cpp/binary_search.cpp",
+		"/Users/dnvy0084/Documents/_cloud_workspace/_py/class.algorithm.nts/binary_search.py",
+		"/Users/dnvy0084/Documents/_cloud_workspace/_py/class.algorithm.nts/hw3.py",
+		"/Users/dnvy0084/Documents/_cloud_workspace/_py/class.algorithm.nts/letterProb.py",
+		"/Users/dnvy0084/Documents/_cloud_workspace/_openGL bible/sb6code_2013_10_11/extern/glfw-2.7.6/compile.bat",
+		"/Users/dnvy0084/Documents/_cloud_workspace/_py/class.algorithm.nts/hw2.py",
+		"/Users/dnvy0084/Downloads/glfw-3.0.3/src/config.h.in",
+		"/Users/dnvy0084/Documents/_xdevelop/_sublime/Point.cpp",
+		"/Users/dnvy0084/Documents/_xdevelop/_sublime/sublimeCompileTest.cpp",
+		"/Volumes/laon.synology.me/workspace/01.doc/01.webgl/webgl for html5/tutorial.html",
+		"/Volumes/NO NAME/Study3/bin-debug/t.html",
+		"/Volumes/NO NAME/Study3/bin-debug/Study3.html",
+		"/Users/dnvy0084/Documents/_cloud_workspace/_workspace(study.ria)/Boundary and Friction/src/utils/Collision.as",
+		"/Users/dnvy0084/Documents/haskell/01.book-haskell programming/Chapter01.hs",
+		"/Volumes/laon.synology.me/workspace/01.doc/03.algorithm/chapter01.cpp",
+		"/Users/dnvy0084/Library/Application Support/Sublime Text 3/Installed Packages/SideBarEnhancements.sublime-package",
+		"/Users/dnvy0084/Library/Application Support/Sublime Text 3/Packages/SideBarEnhancements/CHANGELOG",
+		"/Volumes/workspace/01.doc/01.webgl/webgl for html5/01.setting the scene.html",
+		"/Users/dnvy0084/Documents/_workspace/clean code/StaticCling-Solution-Java/.classpath",
+		"/Users/dnvy0084/Documents/_workspace/clean code/StaticCling-Solution-Java/.project"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"hitTestObject",
+			"conso",
+			"DAReq",
+			"USBBootSupportedModels",
+			"print",
+			"ooa",
+			"');\n",
+			"wmode"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 29.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "untitled.sublime-project",
+	"replace":
+	{
+		"height": 42.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 215.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

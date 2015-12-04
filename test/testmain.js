@@ -16,7 +16,7 @@
 
     function makeList() {
 
-        var currentCase = testcase.TextureSample_02;
+        var currentCase = testcase.RendererTest;
         var list = document.getElementById( "list" );
 
         for( var s in testcase ){

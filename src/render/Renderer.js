@@ -6,7 +6,7 @@
 
     var render = glbasic.import("render");
 
-    var gl, pos, uv, mat, colorMat, stage;
+    var gl;
 
     function Renderer( webglContext ) {
 
@@ -41,7 +41,7 @@
                     this._stageSize.x = value.x;
                     this._stageSize.y = value.y;
 
-                    gl.uniform2f( stage, value.x, value.y );
+                    gl.uniform2f( this._stage, value.x, value.y );
                 }
             },
         });
@@ -54,8 +54,11 @@
 
             this._program = gl.createProgram();
 
-            gl.attachShader( this._program, this.makeShader( gl.VERTEX_SHADER, vertexShaderSource ) );
-            gl.attachShader( this._program, this.makeShader( gl.FRAGMENT_SHADER, fragmentShaderSource ) );
+            this._vertexShader = this.makeShader( gl.VERTEX_SHADER, vertexShaderSource );
+            this._fragmentShader = this.makeShader( gl.FRAGMENT_SHADER, fragmentShaderSource );
+
+            gl.attachShader( this._program, this._vertexShader );
+            gl.attachShader( this._program, this._fragmentShader );
             gl.linkProgram( this._program );
 
             if( !gl.getProgramParameter( this._program, gl.LINK_STATUS ) ){
@@ -63,6 +66,19 @@
             }
 
             this.initProgram();
+
+            return this;
+        },
+
+        dispose: function () {
+
+            gl.detachShader( this._program, this._vertexShader );
+            gl.detachShader( this._program, this._fragmentShader );
+
+            gl.deleteShader( this._vertexShader );
+            gl.deleteShader( this._fragmentShader );
+
+            gl.deleteProgram( this._program );
         },
 
         makeShader: function( type, source ){
@@ -81,12 +97,15 @@
 
         initProgram: function () {
 
-            pos = gl.getAttribLocation( this._program, "pos" );
-            uv = gl.getAttribLocation( this._program, "uv" );
+            gl.useProgram( this._program );
 
-            stage = gl.getUniformLocation( this._program, "stage" );
-            mat = gl.getUniformLocation( this._program, "mat" );
-            colorMat = gl.getUniformLocation( this._program, "colorMat" );
+            this._pos = gl.getAttribLocation( this._program, "pos" );
+            this._uv = gl.getAttribLocation( this._program, "uv" );
+
+            this._mat = gl.getUniformLocation( this._program, "mat" );
+            this._colorMat = gl.getUniformLocation( this._program, "colorMat" );
+
+            this._stage = gl.getUniformLocation( this._program, "stage" );
         },
     }
 
