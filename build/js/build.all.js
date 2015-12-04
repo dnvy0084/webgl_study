@@ -63,6 +63,221 @@
 
     "use strict";
 
+    var geom = glbasic.import("geom");
+
+    function Matrix3D() {
+
+        Object.defineProperties( this, {
+            "raw": {
+                get: function () {
+                    return this._raw;
+                }
+            },
+        });
+
+        this._raw = new Float32Array(16);
+        this.identity();
+    }
+
+    Matrix3D.prototype = {
+        constructor: Matrix3D,
+
+        setTo: function (
+            m11, m12, m13, m14,
+            m21, m22, m23, m24,
+            m31, m32, m33, m34,
+            m41, m42, m43, m44
+        ){
+            var m = this._raw;
+
+            m[0] = m11, m[4] = m12, m[8 ] = m13, m[12] = m14,
+            m[1] = m21, m[5] = m22, m[9 ] = m23, m[13] = m24,
+            m[2] = m31, m[6] = m32, m[10] = m33, m[14] = m34,
+            m[3] = m41, m[7] = m42, m[11] = m43, m[15] = m44;
+        },
+
+        identity: function () {
+            this.setTo(
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            );
+        },
+
+        /**
+         * this = b * this
+         * @param b
+         */
+        preppend: function (b) {
+            var m = b._raw;
+
+            var a11 = m[0], a12 = m[4], a13 = m[8 ], a14 = m[12],
+                a21 = m[1], a22 = m[5], a23 = m[9 ], a24 = m[13],
+                a31 = m[2], a32 = m[6], a33 = m[10], a34 = m[14],
+                a41 = m[3], a42 = m[7], a43 = m[11], a44 = m[15];
+
+            m = this._raw;
+
+            var b11 = m[0], b12 = m[4], b13 = m[8 ], b14 = m[12],
+                b21 = m[1], b22 = m[5], b23 = m[9 ], b24 = m[13],
+                b31 = m[2], b32 = m[6], b33 = m[10], b34 = m[14],
+                b41 = m[3], b42 = m[7], b43 = m[11], b44 = m[15];
+
+            var c11 = a11 * b11 + a12 * b21 + a13 * b31 + a14 * b41,
+                c12 = a11 * b12 + a12 * b22 + a13 * b32 + a14 * b42,
+                c13 = a11 * b13 + a12 * b23 + a13 * b33 + a14 * b43,
+                c14 = a11 * b14 + a12 * b24 + a13 * b34 + a14 * b44,
+
+                c21 = a21 * b11 + a22 * b21 + a23 * b31 + a24 * b41,
+                c22 = a21 * b12 + a22 * b22 + a23 * b32 + a24 * b42,
+                c23 = a21 * b13 + a22 * b23 + a23 * b33 + a24 * b43,
+                c24 = a21 * b14 + a22 * b24 + a23 * b34 + a24 * b44,
+
+                c31 = a31 * b11 + a32 * b21 + a33 * b31 + a44 * b41,
+                c32 = a31 * b12 + a32 * b22 + a33 * b32 + a44 * b42,
+                c33 = a31 * b13 + a32 * b23 + a33 * b33 + a44 * b43,
+                c34 = a31 * b14 + a32 * b24 + a33 * b34 + a44 * b44,
+
+                c41 = a41 * b11 + a42 * b21 + a43 * b31 + a44 * b41,
+                c42 = a41 * b12 + a42 * b22 + a43 * b32 + a44 * b42,
+                c43 = a41 * b13 + a42 * b23 + a43 * b33 + a44 * b43,
+                c44 = a41 * b14 + a42 * b24 + a43 * b34 + a44 * b44;
+
+            this.setTo(
+                c11, c12, c13, c14,
+                c21, c22, c23, c24,
+                c31, c32, c33, c34,
+                c41, c42, c43, c44
+            );
+        },
+    };
+
+    geom.Matrix3D = Matrix3D;
+
+})();
+/**
+ * Created by dnvy0084 on 15. 12. 4..
+ */
+
+(function () {
+
+    var render = glbasic.import("render");
+
+    var gl;
+
+    function Renderer( webglContext ) {
+
+        gl = webglContext;
+
+        this._program = null;
+
+        this._stageSize = { x: 0, y: 0 };
+
+        Object.defineProperties( this, {
+            "webglContext": {
+                get: function () {
+                    return gl;
+                }
+            },
+
+            "program": {
+                get: function () {
+                    return this._program;
+                }
+            },
+
+            "stageSize": {
+                get: function () {
+                    return this._stageSize;
+                },
+                set: function (value) {
+
+                    if(!( value.hasOwnProperty("x") && value.hasOwnProperty("y") ) )
+                        throw new Error( "wrong value" );
+
+                    this._stageSize.x = value.x;
+                    this._stageSize.y = value.y;
+
+                    gl.uniform2f( this._stage, value.x, value.y );
+                }
+            },
+        });
+    }
+
+    Renderer.prototype = {
+        constructor: Renderer,
+
+        initWithSources: function (vertexShaderSource, fragmentShaderSource) {
+
+            this._program = gl.createProgram();
+
+            this._vertexShader = this.makeShader( gl.VERTEX_SHADER, vertexShaderSource );
+            this._fragmentShader = this.makeShader( gl.FRAGMENT_SHADER, fragmentShaderSource );
+
+            gl.attachShader( this._program, this._vertexShader );
+            gl.attachShader( this._program, this._fragmentShader );
+            gl.linkProgram( this._program );
+
+            if( !gl.getProgramParameter( this._program, gl.LINK_STATUS ) ){
+                throw new Error( gl.getProgramInfoLog( this._program ) );
+            }
+
+            this.initProgram();
+
+            return this;
+        },
+
+        dispose: function () {
+
+            gl.detachShader( this._program, this._vertexShader );
+            gl.detachShader( this._program, this._fragmentShader );
+
+            gl.deleteShader( this._vertexShader );
+            gl.deleteShader( this._fragmentShader );
+
+            gl.deleteProgram( this._program );
+        },
+
+        makeShader: function( type, source ){
+
+            var shader = gl.createShader( type );
+
+            gl.shaderSource( shader, source );
+            gl.compileShader( shader );
+
+            if( !gl.getShaderParameter( shader, gl.COMPILE_STATUS ) ){
+                throw new Error( gl.getShaderInfoLog(shader) );
+            }
+
+            return shader;
+        },
+
+        initProgram: function () {
+
+            gl.useProgram( this._program );
+
+            this._pos = gl.getAttribLocation( this._program, "pos" );
+            this._uv = gl.getAttribLocation( this._program, "uv" );
+
+            this._mat = gl.getUniformLocation( this._program, "mat" );
+            this._colorMat = gl.getUniformLocation( this._program, "colorMat" );
+
+            this._stage = gl.getUniformLocation( this._program, "stage" );
+        },
+    }
+
+    render.Renderer = Renderer;
+
+})();
+/**
+ * Created by dnvy0084 on 2015. 11. 21..
+ */
+
+(function () {
+
+    "use strict";
+
     var display = glbasic.import("display");
     var geom = glbasic.import("geom");
 
@@ -238,202 +453,36 @@
     display.DisplayObject = DisplayObject;
 
 })();
-/**
- * Created by dnvy0084 on 2015. 11. 21..
- */
+/****************
+ * Quad.js
+ *****************/
 
 (function () {
 
     "use strict";
 
-    var geom = glbasic.import("geom");
+    var display = glbasic.import("display");
 
-    function Matrix3D() {
+    function Quad() {
 
-        Object.defineProperties( this, {
-            "raw": {
-                get: function () {
-                    return this._raw;
-                }
-            },
-        });
-
-        this._raw = new Float32Array(16);
-        this.identity();
-    }
-
-    Matrix3D.prototype = {
-        constructor: Matrix3D,
-
-        setTo: function (
-            m11, m12, m13, m14,
-            m21, m22, m23, m24,
-            m31, m32, m33, m34,
-            m41, m42, m43, m44
-        ){
-            var m = this._raw;
-
-            m[0] = m11, m[4] = m12, m[8 ] = m13, m[12] = m14,
-            m[1] = m21, m[5] = m22, m[9 ] = m23, m[13] = m24,
-            m[2] = m31, m[6] = m32, m[10] = m33, m[14] = m34,
-            m[3] = m41, m[7] = m42, m[11] = m43, m[15] = m44;
-        },
-
-        identity: function () {
-            this.setTo(
-                1, 0, 0, 0,
-                0, 1, 0, 0,
-                0, 0, 1, 0,
-                0, 0, 0, 1
-            );
-        },
-
-        /**
-         * this = b * this
-         * @param b
-         */
-        preppend: function (b) {
-            var m = b._raw;
-
-            var a11 = m[0], a12 = m[4], a13 = m[8 ], a14 = m[12],
-                a21 = m[1], a22 = m[5], a23 = m[9 ], a24 = m[13],
-                a31 = m[2], a32 = m[6], a33 = m[10], a34 = m[14],
-                a41 = m[3], a42 = m[7], a43 = m[11], a44 = m[15];
-
-            m = this._raw;
-
-            var b11 = m[0], b12 = m[4], b13 = m[8 ], b14 = m[12],
-                b21 = m[1], b22 = m[5], b23 = m[9 ], b24 = m[13],
-                b31 = m[2], b32 = m[6], b33 = m[10], b34 = m[14],
-                b41 = m[3], b42 = m[7], b43 = m[11], b44 = m[15];
-
-            var c11 = a11 * b11 + a12 * b21 + a13 * b31 + a14 * b41,
-                c12 = a11 * b12 + a12 * b22 + a13 * b32 + a14 * b42,
-                c13 = a11 * b13 + a12 * b23 + a13 * b33 + a14 * b43,
-                c14 = a11 * b14 + a12 * b24 + a13 * b34 + a14 * b44,
-
-                c21 = a21 * b11 + a22 * b21 + a23 * b31 + a24 * b41,
-                c22 = a21 * b12 + a22 * b22 + a23 * b32 + a24 * b42,
-                c23 = a21 * b13 + a22 * b23 + a23 * b33 + a24 * b43,
-                c24 = a21 * b14 + a22 * b24 + a23 * b34 + a24 * b44,
-
-                c31 = a31 * b11 + a32 * b21 + a33 * b31 + a44 * b41,
-                c32 = a31 * b12 + a32 * b22 + a33 * b32 + a44 * b42,
-                c33 = a31 * b13 + a32 * b23 + a33 * b33 + a44 * b43,
-                c34 = a31 * b14 + a32 * b24 + a33 * b34 + a44 * b44,
-
-                c41 = a41 * b11 + a42 * b21 + a43 * b31 + a44 * b41,
-                c42 = a41 * b12 + a42 * b22 + a43 * b32 + a44 * b42,
-                c43 = a41 * b13 + a42 * b23 + a43 * b33 + a44 * b43,
-                c44 = a41 * b14 + a42 * b24 + a43 * b34 + a44 * b44;
-
-            this.setTo(
-                c11, c12, c13, c14,
-                c21, c22, c23, c24,
-                c31, c32, c33, c34,
-                c41, c42, c43, c44
-            );
-        },
-    };
-
-    geom.Matrix3D = Matrix3D;
-
-})();
-/**
- * Created by dnvy0084 on 15. 12. 4..
- */
-
-(function () {
-
-    var render = glbasic.import("render");
-
-    var gl, pos, uv, mat, colorMat, stage;
-
-    function Renderer( webglContext ) {
-
-        gl = webglContext;
-
-        this._program = null;
-
-        this._stageSize = { x: 0, y: 0 };
+        this._texture = null;
 
         Object.defineProperties( this, {
-            "webglContext": {
-                get: function () {
-                    return gl;
-                }
-            },
 
-            "program": {
-                get: function () {
-                    return this._program;
-                }
-            },
-
-            "stageSize": {
-                get: function () {
-                    return this._stageSize;
-                },
-                set: function (value) {
-
-                    if(!( value.hasOwnProperty("x") && value.hasOwnProperty("y") ) )
-                        throw new Error( "wrong value" );
-
-                    this._stageSize.x = value.x;
-                    this._stageSize.y = value.y;
-
-                    gl.uniform2f( stage, value.x, value.y );
-                }
-            },
         });
     }
 
-    Renderer.prototype = {
-        constructor: Renderer,
+    Quad.prototype = {
+        constructor: Quad,
 
-        initWithSources: function (vertexShaderSource, fragmentShaderSource) {
-
-            this._program = gl.createProgram();
-
-            gl.attachShader( this._program, this.makeShader( gl.VERTEX_SHADER, vertexShaderSource ) );
-            gl.attachShader( this._program, this.makeShader( gl.FRAGMENT_SHADER, fragmentShaderSource ) );
-            gl.linkProgram( this._program );
-
-            if( !gl.getProgramParameter( this._program, gl.LINK_STATUS ) ){
-                throw new Error( gl.getProgramInfoLog( this._program ) );
-            }
-
-            this.initProgram();
-        },
-
-        makeShader: function( type, source ){
-
-            var shader = gl.createShader( type );
-
-            gl.shaderSource( shader, source );
-            gl.compileShader( shader );
-
-            if( !gl.getShaderParameter( shader, gl.COMPILE_STATUS ) ){
-                throw new Error( gl.getShaderInfoLog(shader) );
-            }
-
-            return shader;
-        },
-
-        initProgram: function () {
-
-            pos = gl.getAttribLocation( this._program, "pos" );
-            uv = gl.getAttribLocation( this._program, "uv" );
-
-            stage = gl.getUniformLocation( this._program, "stage" );
-            mat = gl.getUniformLocation( this._program, "mat" );
-            colorMat = gl.getUniformLocation( this._program, "colorMat" );
-        },
+        
     }
 
-    render.Renderer = Renderer;
+    display.Quad = Quad;
 
 })();
+
+
 /****************
  * createProgram.js
  *****************/
@@ -556,6 +605,14 @@
         clear: function () {
             console.log( "clear // override" );
         },
+
+        setTitle: function (title) {
+            var element = document.getElementById( "title" );
+
+            if( !element ) return;
+
+            element.innerHTML = title;
+        },
     }
 
     testcase.BaseCase = BaseCase;
@@ -579,7 +636,7 @@
 
     function makeList() {
 
-        var currentCase = testcase.TextureSample_02;
+        var currentCase = testcase.RendererTest;
         var list = document.getElementById( "list" );
 
         for( var s in testcase ){
@@ -1142,6 +1199,99 @@
     c.ImageProcessing = ImageProcessing;
 
 })();
+/****************
+ * RendererTest.js
+ *****************/
+
+(function () {
+
+    "use strict";
+
+    var c = test.import("testcase");
+
+    var render = glbasic.import("render");
+    var Renderer = render.Renderer;
+
+    var util = glbasic.import("util");
+
+    var gl;
+
+    function RendererTest() {
+
+    }
+
+    var p = test.extends(RendererTest, c.BaseCase);
+
+    p.start = function () {
+
+        this.setTitle( "renderer test" );
+
+        gl = document.getElementById("canvas").getContext( "webgl" );
+        gl.clearColor( 0, 0, 0, 1 );
+
+        util.loadItems(
+            [ "shader/quadVertexShader.cpp", "shader/colorMatrixFragmentShader.cpp"],
+            (function(res){
+                this.renderer = new Renderer( gl ).initWithSources( res[0], res[1] );
+                this.renderer.stageSize = { x: gl.canvas.width, y: gl.canvas.height };
+
+                this.loadImage();
+            }).bind(this)
+        );
+    };
+
+    p.clear = function () {
+
+        this.setTitle( "" );
+        this.renderer.dispose();
+    };
+
+    p.loadImage = function () {
+
+        var img = document.createElement( "img" );
+        img.src = "img/b.jpg";
+        img.onload = (function(e){
+            this.setGeometry( img );
+            this.draw();
+        }).bind(this);
+    };
+
+    p.draw = function () {
+
+
+
+
+    };
+
+    p.setGeometry = function ( img ) {
+
+        this.vertexBuffer = gl.createBuffer();
+
+        var vertices = new Float32Array([
+            0, 0, 0, 0,
+            img.width, 0, 1, 0,
+            img.width, img.height, 1, 1,
+            0, img.height, 0, 1,
+        ]);
+
+        gl.bindBuffer( gl.ARRAY_BUFFER, this.vertexBuffer );
+        gl.bufferData( gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW );
+
+        this.indexBuffer = gl.createBuffer();
+
+        var indices = new Uint16Array([
+            0, 1, 2, 0, 2, 3
+        ]);
+
+        gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer );
+        gl.bufferData( gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW );
+    };
+
+    c.RendererTest = RendererTest;
+
+})();
+
+
 /****************
  * TextureSample.js
  *****************/
