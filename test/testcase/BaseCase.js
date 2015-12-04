@@ -25,6 +25,14 @@
         clear: function () {
             console.log( "clear // override" );
         },
+
+        setTitle: function (title) {
+            var element = document.getElementById( "title" );
+
+            if( !element ) return;
+
+            element.innerHTML = title;
+        },
     }
 
     testcase.BaseCase = BaseCase;
