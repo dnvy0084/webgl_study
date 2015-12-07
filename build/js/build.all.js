@@ -63,6 +63,301 @@
 
     "use strict";
 
+    var display = glbasic.import("display");
+    var geom = glbasic.import("geom");
+
+    display.RAD = 1 * 180 / Math.PI;
+    display.ANG = 1 * Math.PI / 180;
+
+    function DisplayObject( w, h, gl ) {
+
+        this._x = 0;
+        this._y = 0;
+        this._scaleX = 1;
+        this._scaleY = 1;
+        this._radian = 0;
+        this._anchorX = 0;
+        this._anchorY = 0;
+
+        this._transform = new geom.Matrix3D();
+
+        this._transformChanged = true;
+
+        Object.defineProperties( this, {
+
+            "x": {
+                get: function () {
+                    return this._x;
+                },
+                set: function (value) {
+                    if(this._x == value ) return;
+
+                    this._x = value;
+                    this._transformChanged = true;
+                }
+            },
+
+            "y": {
+                get: function () {
+                    return this._y;
+                },
+                set: function (value) {
+                    if(this._y == value ) return;
+
+                    this._y = value;
+                    this._transformChanged = true;
+                }
+            },
+
+            "scaleX": {
+                get: function () {
+                    return this._scaleX;
+                },
+                set: function (value) {
+                    if(this._scaleX == value ) return;
+
+                    this._scaleX = value;
+                    this._transformChanged = true;
+                }
+            },
+
+            "scaleY": {
+                get: function () {
+                    return this._scaleY;
+                },
+                set: function (value) {
+                    if(this._scaleY == value ) return;
+                    this._scaleY = value;
+
+                    this._transformChanged = true;
+                }
+            },
+
+            "rotation": {
+                get: function () {
+                    return this._radian * display.ANG;
+                },
+                set: function (value) {
+                    this.radian = value * display.RAD;
+                }
+            },
+
+            "radian": {
+                get: function () {
+                    return this._radian;
+                },
+                set: function (value) {
+                    if(value == this._radian) return;
+
+                    this._radian = value;
+                    this._transformChanged = true;
+                }
+            },
+
+            "anchorX": {
+                get: function () {
+                    return this._anchorX;
+                },
+                set: function (value) {
+                    if(this._anchorX == value ) return;
+
+                    this._anchorX = value;
+                    this._transformChanged = true;
+                }
+            },
+
+            "anchorY": {
+                get: function () {
+                    return this._anchorY;
+                },
+                set: function (value) {
+                    if(this._anchorY == value) return;
+
+                    this._anchorY = value;
+                    this._transformChanged = true;
+                }
+            },
+
+            "transform": {
+                get: function () {
+                    if( this._transformChanged )
+                    {
+                        var a, b, c, d, tx, ty;
+
+                        if(this._radian == 0)
+                        {
+                            a = this._scaleX;
+                            b = 0;
+                            c = 0;
+                            d = this._scaleY;
+                            tx = this._x;
+                            ty = this._y;
+                        }
+                        else
+                        {
+
+                        }
+
+                        this._transform.setTo(
+                            a, c, 0, tx,
+                            b, d, 0, ty,
+                            0, 0, 1, 0,
+                            0, 0, 0, 1
+                        );
+                    }
+
+                    return this._transform;
+                }
+            },
+        });
+
+        this.gl = gl;
+        this.setGeometry( w, h );
+    }
+
+    DisplayObject.prototype = {
+
+        constructor: DisplayObject,
+
+        setGeometry: function ( w, h ) {
+
+            this.buffer = this.gl.createBuffer();
+            this.gl.bindBuffer( this.gl.ARRAY_BUFFER, this.buffer );
+
+            var buf = new Float32Array([
+                0, 0, 0, 0,
+                w, 0, 1, 0,
+                w, h, 1, 1,
+                0, h, 0, 1
+            ]);
+
+            this.gl.bufferData( this.gl.ARRAY_BUFFER, buf, this.gl.STATIC_DRAW );
+        },
+    };
+
+    display.DisplayObject = DisplayObject;
+
+})();
+/****************
+ * Quad.js
+ *****************/
+
+(function () {
+
+    "use strict";
+
+    var display = glbasic.import("display");
+
+    var ANG = 180 / Math.PI;
+    var RAD = Math.PI / 180;
+
+    function Quad() {
+
+        this._texture = null;
+
+        this._x = 0;
+        this._y = 0;
+        this._scaleX = 1;
+        this._scaleY = 1;
+        this._radian = 0;
+
+        this.transformChanged = true;
+
+        Object.defineProperties( this, {
+
+            "x": {
+                get: function () {
+                    return this._x;
+                },
+                set: function (value) {
+                    if(this._x == value ) return;
+
+                    this._x = value;
+                    this.transformChanged = true;
+                }
+            },
+
+            "y": {
+                get: function () {
+                    return this._y;
+                },
+                set: function (value) {
+                    if(this._y == value) return;
+
+                    this._y = value;
+                    this.transformChanged = true;
+                }
+            },
+
+            "scaleX": {
+                get: function () {
+                    return this._scaleX;
+                },
+                set: function (value) {
+                    if(value == this._scaleX) return;
+
+                    this._scaleX = value;
+                    this.transformChanged = true;
+                }
+            },
+
+            "scaleY": {
+                get: function () {
+                    return this._scaleY;
+                },
+                set: function (value) {
+                    if(this._scaleY == value) return;
+
+                    this._scaleY = value;
+                    this.transformChanged = true;
+                }
+            },
+
+            "radian": {
+                get: function () {
+                    return this._radian;
+                },
+                set: function (value) {
+                    if( this._radian == value ) return;
+
+                    this._radian = value;
+                    this._transformChanged = true;
+                }
+            },
+
+            // 180 : Math.PI = 1ang : 1rad
+            // 1rad = 1ang * Math.PI / 180;
+            // 1ang = 1rad * 180 / Math.PI;
+            "rotation": {
+                get: function () {
+                    return this._radian * ANG;
+                },
+                set: function (value) {
+                    this.radian = value * RAD;
+                }
+            },
+        });
+    }
+
+    Quad.prototype = {
+        constructor: Quad,
+
+        
+    }
+
+    display.Quad = Quad;
+
+})();
+
+
+/**
+ * Created by dnvy0084 on 2015. 11. 21..
+ */
+
+(function () {
+
+    "use strict";
+
     var geom = glbasic.import("geom");
 
     function Matrix3D() {
@@ -260,6 +555,9 @@
             this._pos = gl.getAttribLocation( this._program, "pos" );
             this._uv = gl.getAttribLocation( this._program, "uv" );
 
+            gl.enableVertexAttribArray( this._pos );
+            gl.enableVertexAttribArray( this._uv );
+
             this._mat = gl.getUniformLocation( this._program, "mat" );
             this._colorMat = gl.getUniformLocation( this._program, "colorMat" );
 
@@ -270,219 +568,6 @@
     render.Renderer = Renderer;
 
 })();
-/**
- * Created by dnvy0084 on 2015. 11. 21..
- */
-
-(function () {
-
-    "use strict";
-
-    var display = glbasic.import("display");
-    var geom = glbasic.import("geom");
-
-    display.RAD = 1 * 180 / Math.PI;
-    display.ANG = 1 * Math.PI / 180;
-
-    function DisplayObject( w, h, gl ) {
-
-        this._x = 0;
-        this._y = 0;
-        this._scaleX = 1;
-        this._scaleY = 1;
-        this._radian = 0;
-        this._anchorX = 0;
-        this._anchorY = 0;
-
-        this._transform = new geom.Matrix3D();
-
-        this._transformChanged = true;
-
-        Object.defineProperties( this, {
-
-            "x": {
-                get: function () {
-                    return this._x;
-                },
-                set: function (value) {
-                    if(this._x == value ) return;
-
-                    this._x = value;
-                    this._transformChanged = true;
-                }
-            },
-
-            "y": {
-                get: function () {
-                    return this._y;
-                },
-                set: function (value) {
-                    if(this._y == value ) return;
-
-                    this._y = value;
-                    this._transformChanged = true;
-                }
-            },
-
-            "scaleX": {
-                get: function () {
-                    return this._scaleX;
-                },
-                set: function (value) {
-                    if(this._scaleX == value ) return;
-
-                    this._scaleX = value;
-                    this._transformChanged = true;
-                }
-            },
-
-            "scaleY": {
-                get: function () {
-                    return this._scaleY;
-                },
-                set: function (value) {
-                    if(this._scaleY == value ) return;
-                    this._scaleY = value;
-
-                    this._transformChanged = true;
-                }
-            },
-
-            "rotation": {
-                get: function () {
-                    return this._radian * display.ANG;
-                },
-                set: function (value) {
-                    this.radian = value * display.RAD;
-                }
-            },
-
-            "radian": {
-                get: function () {
-                    return this._radian;
-                },
-                set: function (value) {
-                    if(value == this._radian) return;
-
-                    this._radian = value;
-                    this._transformChanged = true;
-                }
-            },
-
-            "anchorX": {
-                get: function () {
-                    return this._anchorX;
-                },
-                set: function (value) {
-                    if(this._anchorX == value ) return;
-
-                    this._anchorX = value;
-                    this._transformChanged = true;
-                }
-            },
-
-            "anchorY": {
-                get: function () {
-                    return this._anchorY;
-                },
-                set: function (value) {
-                    if(this._anchorY == value) return;
-
-                    this._anchorY = value;
-                    this._transformChanged = true;
-                }
-            },
-
-            "transform": {
-                get: function () {
-                    if( this._transformChanged )
-                    {
-                        var a, b, c, d, tx, ty;
-
-                        if(this._radian == 0)
-                        {
-                            a = this._scaleX;
-                            b = 0;
-                            c = 0;
-                            d = this._scaleY;
-                            tx = this._x;
-                            ty = this._y;
-                        }
-                        else
-                        {
-
-                        }
-
-                        this._transform.setTo(
-                            a, c, 0, tx,
-                            b, d, 0, ty,
-                            0, 0, 1, 0,
-                            0, 0, 0, 1
-                        );
-                    }
-
-                    return this._transform;
-                }
-            },
-        });
-
-        this.gl = gl;
-        this.setGeometry( w, h );
-    }
-
-    DisplayObject.prototype = {
-
-        constructor: DisplayObject,
-
-        setGeometry: function ( w, h ) {
-
-            this.buffer = this.gl.createBuffer();
-            this.gl.bindBuffer( this.gl.ARRAY_BUFFER, this.buffer );
-
-            var buf = new Float32Array([
-                0, 0, 0, 0,
-                w, 0, 1, 0,
-                w, h, 1, 1,
-                0, h, 0, 1
-            ]);
-
-            this.gl.bufferData( this.gl.ARRAY_BUFFER, buf, this.gl.STATIC_DRAW );
-        },
-    };
-
-    display.DisplayObject = DisplayObject;
-
-})();
-/****************
- * Quad.js
- *****************/
-
-(function () {
-
-    "use strict";
-
-    var display = glbasic.import("display");
-
-    function Quad() {
-
-        this._texture = null;
-
-        Object.defineProperties( this, {
-
-        });
-    }
-
-    Quad.prototype = {
-        constructor: Quad,
-
-        
-    }
-
-    display.Quad = Quad;
-
-})();
-
-
 /****************
  * createProgram.js
  *****************/
@@ -1222,7 +1307,8 @@
 
     var p = test.extends(RendererTest, c.BaseCase);
 
-    p.start = function () {
+    p.start = function () {/b//b//''        ,,,,,.trew3ërr        pp
+        break;.           ,,,,,.trew3ërr        pp
 
         this.setTitle( "renderer test" );
 
@@ -1252,15 +1338,36 @@
         img.src = "img/b.jpg";
         img.onload = (function(e){
             this.setGeometry( img );
+            this.createTexture( img );
             this.draw();
         }).bind(this);
     };
 
     p.draw = function () {
 
+        gl.clear( gl.COLOR_BUFFER_BIT );
 
+        gl.bindBuffer( gl.ARRAY_BUFFER, this.vertexBuffer );
+        gl.vertexAttribPointer( this.renderer._pos, 2, gl.FLOAT, false, 4 * 4, 0 );
+        gl.vertexAttribPointer( this.renderer._uv, 2, gl.FLOAT, false, 4 * 4, 4 * 2 );
 
+        gl.uniformMatrix3fv( this.renderer._mat, false, this.mat );
 
+        gl.bindTexture( gl.TEXTURE_2D, this.tex );
+        gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer );
+        gl.drawElements( gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0 );
+    };
+
+    p.createTexture = function (img) {
+
+        this.tex = gl.createTexture();
+
+        gl.bindTexture( gl.TEXTURE_2D, this.tex );
+            gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
+            gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE );
+            gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST );
+            gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST );
+        gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img );
     };
 
     p.setGeometry = function ( img ) {
@@ -1285,6 +1392,12 @@
 
         gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer );
         gl.bufferData( gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW );
+
+        this.mat = new Float32Array([
+            0.05, 0, 0,
+            0, 0.05, 0,
+            10, 10, 1,
+        ]);
     };
 
     c.RendererTest = RendererTest;
@@ -1662,6 +1775,8 @@
         }
 
         $( ".footer" )[0].appendChild( container );
+
+        
     };
 
     p.initProgram = function (p) {

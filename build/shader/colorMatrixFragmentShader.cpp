@@ -1,10 +1,11 @@
 
-precision mediump float;
+precision highp float;
 
 uniform mat4 colorMat;
+uniform sampler2D tex;
 
 varying vec2 frag_uv;
 
 void main(){
-    gl_FragColor = vec4( 1,0,0,1 );
+    gl_FragColor = texture2D( tex, frag_uv );
 }

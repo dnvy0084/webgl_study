@@ -102,6 +102,9 @@
             this._pos = gl.getAttribLocation( this._program, "pos" );
             this._uv = gl.getAttribLocation( this._program, "uv" );
 
+            gl.enableVertexAttribArray( this._pos );
+            gl.enableVertexAttribArray( this._uv );
+
             this._mat = gl.getUniformLocation( this._program, "mat" );
             this._colorMat = gl.getUniformLocation( this._program, "colorMat" );
 

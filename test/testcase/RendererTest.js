@@ -21,7 +21,8 @@
 
     var p = test.extends(RendererTest, c.BaseCase);
 
-    p.start = function () {
+    p.start = function () {/b//b//''        ,,,,,.trew3ërr        pp
+        break;.           ,,,,,.trew3ërr        pp
 
         this.setTitle( "renderer test" );
 
@@ -51,15 +52,36 @@
         img.src = "img/b.jpg";
         img.onload = (function(e){
             this.setGeometry( img );
+            this.createTexture( img );
             this.draw();
         }).bind(this);
     };
 
     p.draw = function () {
 
+        gl.clear( gl.COLOR_BUFFER_BIT );
 
+        gl.bindBuffer( gl.ARRAY_BUFFER, this.vertexBuffer );
+        gl.vertexAttribPointer( this.renderer._pos, 2, gl.FLOAT, false, 4 * 4, 0 );
+        gl.vertexAttribPointer( this.renderer._uv, 2, gl.FLOAT, false, 4 * 4, 4 * 2 );
 
+        gl.uniformMatrix3fv( this.renderer._mat, false, this.mat );
 
+        gl.bindTexture( gl.TEXTURE_2D, this.tex );
+        gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer );
+        gl.drawElements( gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0 );
+    };
+
+    p.createTexture = function (img) {
+
+        this.tex = gl.createTexture();
+
+        gl.bindTexture( gl.TEXTURE_2D, this.tex );
+            gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
+            gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE );
+            gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST );
+            gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST );
+        gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img );
     };
 
     p.setGeometry = function ( img ) {
@@ -84,6 +106,12 @@
 
         gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer );
         gl.bufferData( gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW );
+
+        this.mat = new Float32Array([
+            0.05, 0, 0,
+            0, 0.05, 0,
+            10, 10, 1,
+        ]);
     };
 
     c.RendererTest = RendererTest;
