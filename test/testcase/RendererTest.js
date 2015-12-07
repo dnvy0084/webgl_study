@@ -21,8 +21,7 @@
 
     var p = test.extends(RendererTest, c.BaseCase);
 
-    p.start = function () {/b//b//''        ,,,,,.trew3ërr        pp
-        break;.           ,,,,,.trew3ërr        pp
+    p.start = function () {
 
         this.setTitle( "renderer test" );
 

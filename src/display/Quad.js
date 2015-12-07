@@ -102,7 +102,9 @@
     Quad.prototype = {
         constructor: Quad,
 
-        
+        render: function (renderer) {
+
+        },
     }
 
     display.Quad = Quad;

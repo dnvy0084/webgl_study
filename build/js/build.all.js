@@ -238,6 +238,58 @@
     display.DisplayObject = DisplayObject;
 
 })();
+/**
+ * Created by dnvy0084 on 15. 12. 7..
+ */
+
+(function () {
+
+    var display = glbasic.import( "display" );
+
+    function DisplayObjectContainer() {
+
+        display.DisplayObject.call( this );
+
+        this._children = [];
+    }
+
+    var p = glbasic.extends( DisplayObjectContainer, display.DisplayObject );
+
+    p.render = function (renderer) {
+
+        for (var i = 0, l = this._children.length; i < l; i++) {
+
+            this._children[i].render( renderer );
+        }
+    };
+
+    p.add = function (child) {
+
+        var index = this._children.indexOf( child );
+
+        if(index != -1) return;
+
+        this._children.push( child );
+        child.parent = this;
+    };
+
+    p.remove = function (child) {
+
+        var index = this._children.indexOf(child);
+
+        if(index != -1) return;
+
+        this._children.splice( index, 1 );
+        child.parent = null;
+    };
+
+    p.contains = function (child) {
+        return this._children.indexOf(child) != -1;
+    };
+    
+    display.DisplayObjectContainer = DisplayObjectContainer;
+
+})();
 /****************
  * Quad.js
  *****************/
@@ -248,17 +300,13 @@
 
     var display = glbasic.import("display");
 
-<<<<<<< HEAD
     var ANG = 180 / Math.PI;
     var RAD = Math.PI / 180;
 
-=======
->>>>>>> 552c680ff2e3002536f49c11b1b55a87de1cd6ad
     function Quad() {
 
         this._texture = null;
 
-<<<<<<< HEAD
         this._x = 0;
         this._y = 0;
         this._scaleX = 1;
@@ -340,17 +388,15 @@
                     this.radian = value * RAD;
                 }
             },
-=======
-        Object.defineProperties( this, {
-
->>>>>>> 552c680ff2e3002536f49c11b1b55a87de1cd6ad
         });
     }
 
     Quad.prototype = {
         constructor: Quad,
 
-        
+        render: function (renderer) {
+
+        },
     }
 
     display.Quad = Quad;
@@ -1315,8 +1361,7 @@
 
     var p = test.extends(RendererTest, c.BaseCase);
 
-    p.start = function () {/b//b//''        ,,,,,.trew3ërr        pp
-        break;.           ,,,,,.trew3ërr        pp
+    p.start = function () {
 
         this.setTitle( "renderer test" );
 
