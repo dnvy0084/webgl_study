@@ -248,13 +248,17 @@
 
     var display = glbasic.import("display");
 
+<<<<<<< HEAD
     var ANG = 180 / Math.PI;
     var RAD = Math.PI / 180;
 
+=======
+>>>>>>> 552c680ff2e3002536f49c11b1b55a87de1cd6ad
     function Quad() {
 
         this._texture = null;
 
+<<<<<<< HEAD
         this._x = 0;
         this._y = 0;
         this._scaleX = 1;
@@ -336,6 +340,10 @@
                     this.radian = value * RAD;
                 }
             },
+=======
+        Object.defineProperties( this, {
+
+>>>>>>> 552c680ff2e3002536f49c11b1b55a87de1cd6ad
         });
     }
 
@@ -721,7 +729,7 @@
 
     function makeList() {
 
-        var currentCase = testcase.RendererTest;
+        var currentCase = testcase.TestSyncBuffer;
         var list = document.getElementById( "list" );
 
         for( var s in testcase ){
@@ -1401,6 +1409,70 @@
     };
 
     c.RendererTest = RendererTest;
+
+})();
+
+
+/****************
+ * TestSyncBuffer.js
+ *****************/
+
+(function () {
+
+    "use strict";
+
+    var c = test.import("testcase");
+    var render = glbasic.import("render");
+    var Renderer = render.Renderer;
+    var util = glbasic.import("util");
+
+    var gl;
+
+    function TestSyncBuffer() {
+
+    }
+
+    var p = test.extends(TestSyncBuffer, c.BaseCase);
+
+    p.start = function () {
+
+        this.setTitle( "buffer sync test" );
+
+        gl = document.getElementById( "canvas").getContext( "webgl" );
+        gl.clearColor( 0, 0, 0, 1 );
+
+        this.render = new Renderer();
+
+        util.loadItems(
+            [ "shader/basicQuadShader.cpp", "shader/basicFragmentShader.cpp" ],
+            (function( res ){
+
+                console.log( res );
+
+            }).bind(this)
+        )
+    };
+
+    p.clear = function () {
+
+    };
+
+    p.makeQuad = function ( w, h ) {
+        var r = {};
+
+        r.vertices = new Float32Array([
+            0, 0,
+            w, 0,
+            w, h,
+            0, h
+        ]);
+
+        r.buffer = gl.createBuffer();
+        gl.bindBuffer( gl.ARRAY_BUFFER, r.buffer );
+        gl.bufferData( gl.ARRAY_BUFFER, r.vertices, gl.STATIC_DRAW );
+    };
+
+    c.TestSyncBuffer = TestSyncBuffer;
 
 })();
 
