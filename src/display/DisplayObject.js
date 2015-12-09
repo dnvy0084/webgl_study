@@ -9,15 +9,15 @@
     var display = glbasic.import("display");
     var geom = glbasic.import("geom");
 
-    display.RAD = 1 * 180 / Math.PI;
-    display.ANG = 1 * Math.PI / 180;
+    var RAD = 180 / Math.PI;
+    var ANG = Math.PI / 180;
 
-    function DisplayObject( w, h, gl ) {
+    function DisplayObject() {
 
         this._x = 0;
         this._y = 0;
-        this._scaleX = 1;
-        this._scaleY = 1;
+        this._scaleX = 1.0;
+        this._scaleY = 1.0;
         this._radian = 0;
         this._anchorX = 0;
         this._anchorY = 0;
@@ -78,10 +78,10 @@
 
             "rotation": {
                 get: function () {
-                    return this._radian * display.ANG;
+                    return this._radian * ANG;
                 },
                 set: function (value) {
-                    this.radian = value * display.RAD;
+                    this.radian = value * RAD;
                 }
             },
 
@@ -153,9 +153,6 @@
                 }
             },
         });
-
-        this.gl = gl;
-        this.setGeometry( w, h );
     }
 
     DisplayObject.prototype = {

@@ -10,6 +10,7 @@
     var render = glbasic.import("render");
     var Renderer = render.Renderer;
     var util = glbasic.import("util");
+    var ProgramBase = render.ProgramBase;
 
     var gl;
 
@@ -28,14 +29,9 @@
 
         this.render = new Renderer();
 
-        util.loadItems(
-            [ "shader/basicQuadShader.cpp", "shader/basicFragmentShader.cpp" ],
-            (function( res ){
+        ProgramBase.setWebglContext( gl );
 
-                console.log( res );
-
-            }).bind(this)
-        )
+        var program = new render.SolidColorProgram();
     };
 
     p.clear = function () {
