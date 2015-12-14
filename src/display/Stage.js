@@ -17,7 +17,8 @@
         display.DisplayObjectContainer.call( this );
 
         this.id = 0;
-        this.superRender = display.DisplayObjectContainer.render.bind( this );
+
+        this.superRender = display.DisplayObjectContainer.prototype.render.bind( this );
 
         this.onUpdate = this.update.bind( this );
         this.onUpdate( 0 );

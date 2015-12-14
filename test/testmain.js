@@ -16,7 +16,7 @@
 
     function makeList() {
 
-        var currentCase = testcase.TestSyncBuffer;
+        var currentCase = testcase.StageTest;
         var list = document.getElementById( "list" );
 
         for( var s in testcase ){
