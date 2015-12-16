@@ -69,6 +69,22 @@
     var RAD = 180 / Math.PI;
     var ANG = Math.PI / 180;
 
+    var gl;
+
+    DisplayObject.initIndexBuffer = function( webglContext ){
+
+        gl = webglContext;
+
+        DisplayObject.indexBuffer = gl.createBuffer();
+
+        var indices = new Uint16Array([
+            0, 1, 2,    0, 2, 3
+        ]);
+
+        gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, DisplayObject.indexBuffer );
+        gl.bufferData( gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW );
+    };
+
     function DisplayObject() {
 
         this._x = 0;
@@ -216,10 +232,18 @@
 
         constructor: DisplayObject,
 
+        initWithImage: function ( webglContext, image ) {
+
+            if( !gl ) gl = webglContext;
+            this._image = image;
+
+            this.setGeometry( this._image.width, this._image.height );
+            this.setTexture();
+        },
+
         setGeometry: function ( w, h ) {
 
-            this.buffer = this.gl.createBuffer();
-            this.gl.bindBuffer( this.gl.ARRAY_BUFFER, this.buffer );
+            this.vertexBuffer = gl.createBuffer();
 
             var buf = new Float32Array([
                 0, 0, 0, 0,
@@ -228,7 +252,24 @@
                 0, h, 0, 1
             ]);
 
-            this.gl.bufferData( this.gl.ARRAY_BUFFER, buf, this.gl.STATIC_DRAW );
+            gl.bindBuffer( gl.ARRAY_BUFFER, this.vertexBuffer );
+            gl.bufferData( gl.ARRAY_BUFFER, buf, this.vertexBuffer );
+        },
+
+        setTexture: function () {
+
+            this.texture = gl.createTexture();
+
+            gl.bindTexture( gl.TEXTURE_2D, this.texture );
+                gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
+                gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE );
+                gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST );
+                gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST );
+            gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this._image );
+        },
+
+        render: function (renderer) {
+
         },
     };
 
@@ -410,17 +451,18 @@
     "use strict";
 
     var display = glbasic.import("display");
+    var gl;
 
-    Stage.initialize = function () {
-
-    };
-
-    function Stage() {
+    function Stage( canvas ) {
 
         display.DisplayObjectContainer.call( this );
 
-        this.id = 0;
+        if( typeof canvas == "string" )
+            gl = document.getElementById( canvas).getContext( "webgl" );
+        else
+            gl = canvas.getContext( "webgl" );
 
+        this.id = 0;
         this.superRender = display.DisplayObjectContainer.prototype.render.bind( this );
 
         this.onUpdate = this.update.bind( this );
@@ -431,6 +473,32 @@
             "renderer": {
                 get: function () {
                     return this._renderer;
+                }
+            },
+
+            "webglContext": {
+                get: function () {
+                    return gl;
+                }
+            },
+
+            "background": {
+                get: function () {
+                    var a = gl.getParameter( gl.COLOR_CLEAR_VALUE );
+
+                    return  parseInt( a[3] * 255 ) << 24 |
+                            parseInt( a[0] * 255 ) << 16 |
+                            parseInt( a[1] * 255 ) << 8 |
+                            parseInt( a[2] * 255 );
+                },
+                set: function (value) {
+
+                    var a = ( value >> 24 & 0xff ) / 255,
+                        r = ( value >> 16 & 0xff ) / 255,
+                        g = ( value >> 8 & 0xff ) / 255,
+                        b = ( value & 0xff ) / 255;
+
+                    gl.clearColor( r, g, b, a );
                 }
             },
         });
@@ -446,6 +514,8 @@
     p.update = function ( time ) {
 
         this.id = requestAnimationFrame( this.onUpdate );
+
+        gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT );
 
         this.superRender( this, [ this._renderer ] );
     };
@@ -1721,6 +1791,7 @@
     var c = test.import("testcase");
     var display = glbasic.import("display");
     var Stage = display.Stage;
+    var DisplayObject = display.DisplayObject;
 
     var gl;
 
@@ -1731,10 +1802,19 @@
     var p = test.extends(StageTest, c.BaseCase);
 
     p.start = function () {
-        this.setTitle( "stage test" );
-        gl = document.getElementById( "canvas").getContext( "webgl" );
 
-        new Stage();
+        this.setTitle( "stage test" );
+
+        var stage = new Stage( "canvas" );
+        stage.background = 0xffcccccc;
+
+        console.log( stage.webglContext );
+
+        var img = document.createElement( "img" );
+        img.src = "img/laon0.png";
+
+        var o = new DisplayObject();
+        stage.add( o );
     };
 
     p.clear = function () {

@@ -12,6 +12,22 @@
     var RAD = 180 / Math.PI;
     var ANG = Math.PI / 180;
 
+    var gl;
+
+    DisplayObject.initIndexBuffer = function( webglContext ){
+
+        gl = webglContext;
+
+        DisplayObject.indexBuffer = gl.createBuffer();
+
+        var indices = new Uint16Array([
+            0, 1, 2,    0, 2, 3
+        ]);
+
+        gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, DisplayObject.indexBuffer );
+        gl.bufferData( gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW );
+    };
+
     function DisplayObject() {
 
         this._x = 0;
@@ -159,10 +175,18 @@
 
         constructor: DisplayObject,
 
+        initWithImage: function ( webglContext, image ) {
+
+            if( !gl ) gl = webglContext;
+            this._image = image;
+
+            this.setGeometry( this._image.width, this._image.height );
+            this.setTexture();
+        },
+
         setGeometry: function ( w, h ) {
 
-            this.buffer = this.gl.createBuffer();
-            this.gl.bindBuffer( this.gl.ARRAY_BUFFER, this.buffer );
+            this.vertexBuffer = gl.createBuffer();
 
             var buf = new Float32Array([
                 0, 0, 0, 0,
@@ -171,7 +195,24 @@
                 0, h, 0, 1
             ]);
 
-            this.gl.bufferData( this.gl.ARRAY_BUFFER, buf, this.gl.STATIC_DRAW );
+            gl.bindBuffer( gl.ARRAY_BUFFER, this.vertexBuffer );
+            gl.bufferData( gl.ARRAY_BUFFER, buf, this.vertexBuffer );
+        },
+
+        setTexture: function () {
+
+            this.texture = gl.createTexture();
+
+            gl.bindTexture( gl.TEXTURE_2D, this.texture );
+                gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
+                gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE );
+                gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST );
+                gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST );
+            gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this._image );
+        },
+
+        render: function (renderer) {
+
         },
     };
 
