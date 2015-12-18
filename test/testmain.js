@@ -16,7 +16,7 @@
 
     function makeList() {
 
-        var currentCase = testcase.StageTest;
+        var currentCase = testcase.NodeTest;
         var list = document.getElementById( "list" );
 
         for( var s in testcase ){
@@ -38,6 +38,7 @@
     }
 
     function clearCase() {
+
         if( current == null ) return;
 
         current.clear();

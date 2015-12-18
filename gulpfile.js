@@ -10,6 +10,7 @@ var paths = {
     src: [
         "src/namespace.js",
         "src/srcmain.js",
+        "src/geom/*.js",
         "src/**/*.js",
         "test/testcase/BaseCase.js",
         "test/**/*.js",
