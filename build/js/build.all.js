@@ -685,108 +685,6 @@
 
 
 /****************
- * Node.js
- *****************/
-
-(function () {
-
-    "use strict";
-
-    var texture = glbasic.import("texture");
-    var geom = glbasic.import("geom");
-    var Rectangle = geom.Rectangle;
-
-    function Node( x, y, width, height ) {
-
-        this._x = x;
-        this._y = y;
-        this._w = width;
-        this._h = height;
-        this._used = false;
-        this._left = null;
-        this._right = null;
-
-        Object.defineProperties( this, {
-
-            "x": {
-                get: function () {
-                    return this._x;
-                }
-            },
-
-            "y": {
-                get: function () {
-                    return this._y;
-                }
-            },
-
-            "width": {
-                get: function () {
-                    return this._w;
-                }
-            },
-
-            "height": {
-                get: function () {
-                    return this._h;
-                }
-            },
-
-            "used": {
-                get: function () {
-                    return this._used;
-                }
-            },
-
-            "hasChildren": {
-                get: function () {
-                    return this._left != null;
-                }
-            },
-        });
-    }
-
-    Node.prototype = {
-        constructor: Node,
-        append: function (width, height) {
-
-            if( this.hasChildren )
-                return  this._left.append( width, height ) ||
-                        this._right.append( width, height );
-
-            var w = this.width,
-                h = this.height;
-
-            if( this._used ) return null; // used node
-            if( width > w || height > h ) return null; // too big
-
-            // exact fit, return this node
-            if( width == w && height == h ) return this._used = true, this;
-
-            var dw = w - width,
-                dh = h - height;
-
-            if( dw > dh )
-            {
-                this._left = new Node( this.x, this.y, width, h );
-                this._right = new Node( this.x + width, this.y, w - width, h );
-            }
-            else
-            {
-                this._left = new Node( this.x, this.y, w, height );
-                this._right = new Node( this.x, this.y + height, w, h - height );
-            }
-
-            return this._left.append( width, height );
-        },
-    }
-
-    texture.Node = Node;
-
-})();
-
-
-/****************
  * Program.js
  *****************/
 
@@ -1100,6 +998,154 @@
     };
 
     render.SolidColorProgram = SolidColorProgram;
+
+})();
+
+
+/****************
+ * Node.js
+ *****************/
+
+(function () {
+
+    "use strict";
+
+    var texture = glbasic.import("texture");
+    var geom = glbasic.import("geom");
+    var Rectangle = geom.Rectangle;
+
+    function Node( x, y, width, height ) {
+
+        this._x = x;
+        this._y = y;
+        this._w = width;
+        this._h = height;
+        this._used = false;
+        this._left = null;
+        this._right = null;
+
+        Object.defineProperties( this, {
+
+            "x": {
+                get: function () {
+                    return this._x;
+                }
+            },
+
+            "y": {
+                get: function () {
+                    return this._y;
+                }
+            },
+
+            "width": {
+                get: function () {
+                    return this._w;
+                }
+            },
+
+            "height": {
+                get: function () {
+                    return this._h;
+                }
+            },
+
+            "used": {
+                get: function () {
+                    return this._used;
+                }
+            },
+
+            "hasChildren": {
+                get: function () {
+                    return this._left != null;
+                }
+            },
+        });
+    }
+
+    Node.prototype = {
+        constructor: Node,
+        append: function (width, height) {
+
+            if( this.hasChildren )
+                return  this._left.append( width, height ) ||
+                        this._right.append( width, height );
+
+            var w = this.width,
+                h = this.height;
+
+            if( this._used ) return null; // used node
+            if( width > w || height > h ) return null; // too big
+
+            // exact fit, return this node
+            if( width == w && height == h ) return this._used = true, this;
+
+            var dw = w - width,
+                dh = h - height;
+
+            if( dw > dh )
+            {
+                this._left = new Node( this.x, this.y, width, h );
+                this._right = new Node( this.x + width, this.y, w - width, h );
+            }
+            else
+            {
+                this._left = new Node( this.x, this.y, w, height );
+                this._right = new Node( this.x, this.y + height, w, h - height );
+            }
+
+            return this._left.append( width, height );
+        },
+    }
+
+    texture.Node = Node;
+
+})();
+
+
+/****************
+ * Texture.js
+ *****************/
+
+(function () {
+
+    "use strict";
+
+    var tex = glbasic.import("texture");
+    var Node = tex.Node;
+
+    var size = 2048;
+
+    Texture.initWithSize = function (textureSize) {
+
+        if( textureSize < 32 )
+            throw new Error( "[Error]: textureSize has to bigger then 32" );
+
+        var t = textureSize;
+
+        for( ; t > 1; t >>= 1 ){
+            if( t & 1 ) throw new Error( "[ERROR]: textureSize has to be pow of 2." );
+        }
+
+        size = textureSize;
+    };
+
+    function Texture() {
+
+        this.root = new Node( 0, 0, size, size );
+
+    }
+
+    Texture.prototype = {
+        constructor: Texture,
+
+        append: function (key, width, height) {
+
+        },
+    }
+
+    tex.Texture = Texture;
 
 })();
 
@@ -1830,8 +1876,9 @@
     "use strict";
 
     var c = test.import("testcase");
-    var texture = glbasic.import("texture");
-    var Node = texture.Node;
+    var tex = glbasic.import("texture");
+    var Texture = tex.Texture;
+    var Node = tex.Node;
 
     function NodeTest() {
 
@@ -1894,10 +1941,29 @@
         }).bind(this);
 
         onRender();
+        this.testTexturesCheckPowof2();
     };
 
     p.clear = function () {
 
+    };
+
+    p.testTexturesCheckPowof2 = function () {
+        var a = [ 0, 23, 32, 60, 128, 256, 4096, 500 ];
+
+        for (var i = 0; i < a.length; i++) {
+
+            console.log( i, a[i] );
+
+            try
+            {
+                Texture.initWithSize( a[i] );
+            }
+            catch( e )
+            {
+                console.log( e );
+            }
+        }
     };
 
     p.makeQuad = function ( w, h, color) {

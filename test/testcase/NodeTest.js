@@ -7,8 +7,9 @@
     "use strict";
 
     var c = test.import("testcase");
-    var texture = glbasic.import("texture");
-    var Node = texture.Node;
+    var tex = glbasic.import("texture");
+    var Texture = tex.Texture;
+    var Node = tex.Node;
 
     function NodeTest() {
 
@@ -71,10 +72,29 @@
         }).bind(this);
 
         onRender();
+        this.testTexturesCheckPowof2();
     };
 
     p.clear = function () {
 
+    };
+
+    p.testTexturesCheckPowof2 = function () {
+        var a = [ 0, 23, 32, 60, 128, 256, 4096, 500 ];
+
+        for (var i = 0; i < a.length; i++) {
+
+            console.log( i, a[i] );
+
+            try
+            {
+                Texture.initWithSize( a[i] );
+            }
+            catch( e )
+            {
+                console.log( e );
+            }
+        }
     };
 
     p.makeQuad = function ( w, h, color) {
