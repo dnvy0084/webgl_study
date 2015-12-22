@@ -1249,6 +1249,8 @@
 /****************
  * BaseCase.js
  *****************/
+ 
+ /* global webkitCancelRequestAnimationFrame */
 
 (function () {
 
@@ -1870,6 +1872,9 @@
 /****************
  * NodeTest.js
  *****************/
+ 
+ /* global glbasic */
+ /* global requestAnimationFrame */
 
 (function () {
 
@@ -1888,7 +1893,7 @@
 
     p.start = function () {
 
-        this.setTitle( "node test" );
+        this.setTitle( "bin tree node test" );
 
         var canvas = document.getElementById("canvas");
 

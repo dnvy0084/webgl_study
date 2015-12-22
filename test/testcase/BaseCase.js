@@ -2,6 +2,8 @@
 /****************
  * BaseCase.js
  *****************/
+ 
+ /* global webkitCancelRequestAnimationFrame */
 
 (function () {
 
