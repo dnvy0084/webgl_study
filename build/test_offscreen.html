@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>test html page</title>
+        <style type="text/css">
+            #canvas{
+                border: 1px solid #c00;
+            }
+        </style>
+        <script type="text/javascript">
+        
+            var canvas;
+            var context;
+            
+            function init() {
+                
+                canvas = document.getElementById( "canvas" );
+                context = canvas.getContext( "2d" );
+                
+                var offcanvas = document.createElement( "canvas" );
+                
+                offcanvas.width = canvas.width;
+                offcanvas.height = canvas.height;
+                
+                var offContext = offcanvas.getContext( "2d" );
+                
+                var match = document.location.href.match( /case_num=\d+/g );
+                var t = 1;
+                
+                if( match && match.length ){
+                    
+                    t = match[0].match(/\d+/g)[0];
+                }
+                
+                var n = new Date().getTime();
+                
+                draw( offContext, t );
+                context.drawImage( offcanvas, 0, 0 );
+                
+                document.getElementById( "title" ).innerHTML = t + ") Done:" + ( new Date().getTime() - n );
+            }
+            
+            function draw( context, n ){
+                
+                n = n || 1;
+                
+                var w = canvas.width,
+                    h = canvas.height, 
+                    r, g, b;
+                    
+                context.clearRect( 0, 0, w, h );
+                
+                for (var i = 0; i < n; i++) {
+                    for (var x = 0; x < w; x++) {
+                        for (var y = 0; y < h; y++) {
+                            
+                            r = zfill( parseInt( 255 - x / w * 255 ).toString( 16 ), 2 );
+                            g = zfill( parseInt( y / h * 255 ).toString( 16 ), 2 );
+                            b = "00";
+                            
+                            context.fillStyle = "#" + r + g + b;
+                            context.fillRect(x,y,1,1);
+                        }
+                    }
+                }
+            }
+            
+            function zfill( s, n ) {
+                if( s.length >= n ) return s;
+                
+                return zfill( "0" + s, n );
+            }
+            
+            window.onload = init;
+            
+        </script>
+    </head>
+    <body>
+        <div class="wrapper">
+            <h3 id="title">test run page</h3>
+            <div class="content">
+                <canvas id="canvas" width="1024" height="1024"></canvas>
+            </div>
+            <div class="footer"></div>
+        </div>
+    </body>
+</html>

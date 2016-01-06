@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>pixelate scale test</title>
+        <style type="text/css">
+            #canvas{
+                border: 1px #aaa solid;
+            }
+        </style>
+        <script type="text/javascript">
+            
+            var colorBuffer;
+            var context;
+            var px, py;
+            var points = [];
+            var transform = new Float32Array( 9 );
+            
+            function init(){
+                
+                context = document.getElementById( "canvas" ).getContext( "2d" );
+                colorBuffer = new Uint8Array( context.canvas.width * context.canvas.height );
+                
+                transform[0] = 1, transform[2] = 0, transform[4] = 0, 
+                transform[1] = 0, transform[3] = 1, transform[5] = 0, 
+                
+                initEvents();
+                
+                setColorBuffer( lineToBresenham( 0, 0, 100, 100 ) );
+                render();
+            }
+            
+            function initEvents(){
+                
+                var canvas = context.canvas;
+                
+                canvas.addEventListener( "mousedown", function(e){
+                    
+                    px = e.offsetX;
+                    py = e.offsetY;
+                    
+                    canvas.addEventListener( "mousemove", mousemove );
+                });
+                
+                document.body.addEventListener( "mouseup", function(e){
+                    
+                    canvas.removeEventListener( "mousemove", mousemove );    
+                });
+                
+                canvas.addEventListener( "mousewheel", function(e) {
+                    
+                    var x = e.offsetX,
+                        y = e.offsetY;
+                    
+                    var scale = Math.max( 1, transform[0] + e.deltaY / -1000 );
+                    
+                    transform[0] = transform[3] = scale;
+                    transform[4] = x * ( 1 - scale );
+                    transform[5] = y * ( 1 - scale );
+                    
+                    render();
+                })
+            }
+            
+            function mousemove( e ){
+                
+                points.length = 0;
+                
+                var ax, ay, bx, by,
+                    a = transform[0],
+                    d = transform[3],
+                    tx = transform[4],
+                    ty = transform[5];
+                
+                ax = px// px * 1 / a - tx;
+                ay = py// py * 1 / d - ty;
+                bx = e.offsetX //* 1 / a - tx;
+                by = e.offsetY //* 1 / d - ty;
+                
+                console.log( "(%d,%d-%d,%d) - (%d,%d-%d,%d)", px, py, e.offsetX, e.offsetY, ax, ay, bx, by );
+                
+                setColorBuffer( lineToBresenham( ax, ay, bx, by, points ) );
+                
+                px = e.offsetX;
+                py = e.offsetY;
+                
+                render();
+            }
+            
+            function setColorBuffer( points ){
+                
+                var x, y, j, 
+                    w = context.canvas.width, 
+                    h = context.canvas.height,
+                    l = colorBuffer.length;
+                
+                context.beginPath();
+                
+                for( var i = 0; i < points.length; i += 2 ){
+                    
+                    x = points[ i ];
+                    y = points[i+1];
+                    
+                    j = y * w + x;
+                    
+                    if( x >= w || j >= l ) continue;
+                    
+                    colorBuffer[j] = 1;
+                }
+            }
+            
+            function render(){
+                
+                var stageWidth = context.canvas.width,
+                    stageHeight = context.canvas.height,
+                    l = colorBuffer.length,
+                    a = transform[0],
+                    d = transform[3],
+                    tx = transform[4],
+                    ty = transform[5],
+                    x, y, w, h;
+                    
+                context.clearRect( 0, 0, stageWidth, stageHeight );
+                
+                context.fillStyle = "#c00";
+                context.beginPath();
+                    
+                for( var i = 0; i < l; ++i ){
+                
+                    if( colorBuffer[i] == 0 ) continue;
+                    
+                    x = parseInt( ( i % stageWidth ) * a + tx );
+                    y = parseInt( ( i / stageWidth ) * d + ty );
+                    w = parseInt( a + 0.9 );
+                    h = parseInt( d + 0.9 );
+                    
+                    if( x >= stageWidth || x + w < 0 || y >= stageHeight || y + h < 0 ) continue;
+                    
+                    context.rect( x, y, w, h );
+                }
+                
+                context.fill();
+            }
+            
+            /**
+    		* bresenham line raster algorithm
+    		*/
+    		function lineToBresenham( ax, ay, bx, by, buf )
+    		{
+    			var dx = Math.abs( bx - ax ),
+    				dy = Math.abs( by - ay ),
+    				e, x, y, di, dt, t;
+    				
+    			buf = buf || [];
+    			
+    			if( dx > dy )
+    			{
+    				di = ax < bx ? +1 : -1;
+    				dt = ay < by ? +1 : -1;
+    				t = bx + di;
+    				e = 0;
+    				for( x = ax, y = ay; x != t; x += di )
+    				{
+    					buf.push( x );
+    					buf.push( y );
+    					e += dy;
+    					if( ( e << 1 ) > dx )
+    					{
+    						y = y + dt;
+    						e -= dx;
+    					}
+    				}
+    			}
+    			else
+    			{
+    				di = ay < by ? +1 : -1;
+    				dt = ax < bx ? +1 : -1;
+    				t = by + di;
+    				e = 0;
+    				for( x = ax, y = ay; y != t; y += di )
+    				{
+    					buf.push( x );
+    					buf.push( y );
+    					e += dx;
+    					if( ( e << 1 ) > dy )
+    					{
+    						x = x + dt;
+    						e -= dy;
+    					}
+    				}
+    			}
+    			
+    			return buf;
+    		};
+            
+            window.onload = init;
+            
+        </script>
+    </head>
+    <body>
+        <div class="wrapper">
+            <h3 id="title">pixelate scale test
+            </h3>
+            <canvas id="canvas" width="500" height="400"></canvas>
+        </div>
+    </body>
+</html>

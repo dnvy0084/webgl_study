@@ -2,6 +2,9 @@
 /****************
  * testmain.js
  *****************/
+ 
+ /* global test */
+ /* global glbasic */
 
 (function () {
 
@@ -16,17 +19,17 @@
 
     function makeList() {
 
-        var currentCase = testcase.NodeTest;
+        var currentCase = testcase.TempTest;
         var list = document.getElementById( "list" );
 
         for( var s in testcase ){
             if( s == "BaseCase" ) continue;
 
             var opt = document.createElement("option");
-            opt.value = s;
+            opt.value = s; 
             opt.innerHTML = s;
 
-            list.appendChild( opt );
+            list.appendChild( opt ); 
         }
 
         list.addEventListener( "change", onChange );

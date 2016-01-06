@@ -4,6 +4,7 @@
  
  /* global glbasic */
  /* global requestAnimationFrame */
+ /* global gl */
 
 (function () {
 
@@ -13,9 +14,9 @@
     var tex = glbasic.import("texture");
     var Texture = tex.Texture;
     var Node = tex.Node;
-
+    
     function NodeTest() {
-
+        
     }
 
     var p = test.extends(NodeTest, c.BaseCase);
@@ -35,7 +36,7 @@
 
         var t = 0;
         var randLen = 300;
-
+        
         var onRender = (function render( ms ) {
 
             this.id = requestAnimationFrame( onRender );

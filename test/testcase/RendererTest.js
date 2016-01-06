@@ -2,6 +2,9 @@
  * RendererTest.js
  *****************/
 
+ /* global glbasic */
+ /* global WebGLRenderingContext gl */
+
 (function () {
 
     "use strict";
@@ -16,17 +19,19 @@
     var gl;
 
     function RendererTest() {
-
+        
     }
 
     var p = test.extends(RendererTest, c.BaseCase);
 
     p.start = function () {
-
+        
         this.setTitle( "renderer test" );
 
         gl = document.getElementById("canvas").getContext( "webgl" );
         gl.clearColor( 0, 0, 0, 1 );
+        
+        console.log( gl );
 
         util.loadItems(
             [ "shader/quadVertexShader.cpp", "shader/colorMatrixFragmentShader.cpp"],

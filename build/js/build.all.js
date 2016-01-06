@@ -214,6 +214,447 @@
 })();
 
 
+var gl = gl || {};
+
+gl.drawingBufferHeight = 500;
+gl.drawingBufferWidth = 500;
+gl.canvas = null;
+
+gl.activeTexture = function( eTexture ){}
+gl.attachShader = function( oProgram, oShader ){}
+gl.bindAttribLocation = function( oProgram, uintIndex, stringName ){}
+gl.bindBuffer = function( eTarget, oBuffer ){}
+gl.bindFramebuffer = function( eTarget, oFramebuffer ){}
+gl.bindRenderbuffer = function( eTarget, oRenderbuffer ){}
+gl.bindTexture = function( eTarget, oTexture ){}
+gl.blendColor = function( fRed, fGreen, fBlue, fAlpha ){}
+gl.blendEquation = function( eMode ){}
+gl.blendEquationSeparate = function( eModeRGB, eModeAlpha ){}
+gl.blendFunc = function( eSfactor, eDfactor ){}
+gl.blendFuncSeparate = function( eSrcRGB, eDstRGB, eSrcAlpha, eDstAlpha ){}
+gl.bufferData = function( eTarget, oArrayBuffer, eUsage ){}
+gl.bufferSubData = function( eTarget, nOffset, oData ){}
+gl.checkFramebufferStatus = function( eTarget ){}
+gl.clear = function( nMask ){}
+gl.clearColor = function( fRed, fGreen, fBlue, fAlpha ){}
+gl.clearDepth = function( fDepth ){}
+gl.clearStencil = function( intS ){}
+gl.colorMask = function( bRed, bGreen, bBlue, bAlpha ){}
+gl.compileShader = function( oShader ){}
+gl.compressedTexImage2D = function( eTarget, numberLevel, numberInternalformat, numberWidth, numberHeight, numberRborder, arrayBufferData ){}
+gl.compressedTexSubImage2D = function( eTarget, numberLevel, numberXoffset, numberYoffset, numberWidth, numberRheight, eFormat,arrayBufferData ){}
+gl.copyTexImage2D = function( eTarget, intLevel, eInternalformat, intX, intY, intWidth, intHeight, intBorder ){}
+gl.copyTexSubImage2D = function( eTarget, intLevel, intXoffset, intYoffset, intX, intY, intWidth, intHeight ){}
+gl.createBuffer = function(){}
+gl.createFramebuffer = function(){}
+gl.createProgram = function(){}
+gl.createRenderbuffer = function(){}
+gl.createShader = function( eType ){}
+gl.createTexture = function(){}
+gl.cullFace = function( eMode ){}
+gl.deleteBuffer = function( oBuffer ){}
+gl.deleteFramebuffer = function( oBuffer ){}
+gl.deleteProgram = function( oProgram ){}
+gl.deleteRenderbuffer = function( oRenderbuffer ){}
+gl.deleteShader = function( oShader ){}
+gl.deleteTexture = function( oTexture ){}
+gl.depthFunc = function( eFunc ){}
+gl.depthMask = function( bFlag ){}
+gl.depthRange = function( fZNear, fGFar ){}
+gl.detachShader = function( oProgram, oShader ){}
+gl.disable = function( eCap ){}
+gl.disableVertexAttribArray = function( uintIndex ){}
+gl.drawArrays = function( eMode, intFirst, intCount ){}
+gl.drawElements = function( eMode, nCount, eType, intOffset ){}
+gl.enable = function( eCap ){}
+gl.enableVertexAttribArray = function( uintIndex ){}
+gl.finish = function(){}
+gl.flush = function(){}
+gl.framebufferRenderbuffer = function( eTarget, eAttachment, eRenderbuffertarget, oRenderbuffer ){}
+gl.framebufferTexture2D = function( eTarget, eAttachment, eTextarget, oTexture, intLevel ){}
+gl.frontFace = function( eMode ){}
+gl.generateMipmap = function( eTarget ){}
+gl.getActiveAttrib = function( oProgram, uintIndex ){}
+gl.getActiveUniform = function( oProgram, uintIndex ){}
+gl.getAttachedShaders = function( oProgram ){}
+gl.getAttribLocation = function( oProgram, stringName ){}
+gl.getBufferParameter = function( eTarget, ePname ){}
+gl.getContextAttributes = function(){}
+gl.getError = function(){}
+gl.getExtension = function( stringName ){}
+gl.getFramebufferAttachmentParameter = function( eTarget, eAttachment, ePname ){}
+gl.getParameter = function( ePname ){}
+gl.getProgramParameter = function( oProgram, ePname ){}
+gl.getProgramInfoLog = function( oProgram ){}
+gl.getRenderbufferParameter = function( eTarget, ePname ){}
+gl.getShaderParameter = function( oShader, ePname ){}
+gl.getShaderInfoLog = function( oShader ){}
+gl.getShaderPrecisionFormat = function( eShaderType, ePrecisionType ){}
+gl.getShaderSource = function( oShader ){}
+gl.getSupportedExtensions = function(){}
+gl.getTexParameter = function( eTarget, ePname ){}
+gl.getUniform = function( oProgram, uintLocation ){}
+gl.getUniformLocation = function( oProgram, stringName ){}
+gl.getVertexAttrib = function( uintIndex, ePname ){}
+gl.getVertexAttribOffset = function( uintIndex, ePname ){}
+gl.hint = function( eTarget, eMode ){}
+gl.isBuffer = function( oBuffer ){}
+gl.isContextLost = function(){}
+gl.isEnabled = function( eCap ){}
+gl.isFramebuffer = function( oFramebuffer ){}
+gl.isProgram = function( oProgram ){}
+gl.isRenderbuffer = function( oRenderbuffer ){}
+gl.isShader = function( oShader ){}
+gl.isTexture = function( oTexture ){}
+gl.lineWidth = function( fWidth ){}
+gl.linkProgram = function( oProgram ){}
+gl.pixelStorei = function( ePname, intParam ){}
+gl.polygonOffset = function( fFactor, fGnits ){}
+gl.readPixels = function( intX, intY, intWidth, intHeight, eFormat, eType, oPixels ){}
+gl.renderbufferStorage = function( eTarget, eInternalformat, intWidth, intHeight ){}
+gl.sampleCoverage = function( fValue, bInvert ){}
+gl.scissor = function( intX, intY, intWidth, intHeight ){}
+gl.shaderSource = function( oShader, stringSource ){}
+gl.stencilFunc = function( eFunc, intRef, uintMask ){}
+gl.stencilFuncSeparate = function( eFace, eFunc, intRef, uintMask ){}
+gl.stencilMask = function( uintMask ){}
+gl.stencilMaskSeparate = function( eFace, uintMask ){}
+gl.stencilOp = function( eFail, eZfail, eZpass ){}
+gl.stencilOpSeparate = function( eFace, eFail, eZfail, eZpass ){}
+gl.texParameterf = function( eTarget, ePname, fParam ){}
+gl.texParameteri = function( eTarget, ePname, intParam ){}
+gl.texImage2D = function( eTarget, intLevel, eInternalformat, intWidth, intHeight, intBorder, eFormat, eType, oPixels ){}
+gl.texSubImage2D = function( eTarget, intLevel, intXoffset, intYoffset, intWidth, intHeight, eFormat, eType, oPixels ){}
+gl.uniform1f = function( uintLocation, fG ){}
+gl.uniform1fv = function( uintLocation, flaot32ArrayVector ){}
+gl.uniform1i = function( uintLocation, intX ){}
+gl.uniform1iv = function( uintLocation, int32ArrayVector ){}
+gl.uniform2f = function( uintLocation, fG, fY ){}
+gl.uniform2fv = function( uintLocation, flaot32ArrayVector ){}
+gl.uniform2i = function( uintLocation, intX, intY ){}
+gl.uniform2iv = function( uintLocation, int32ArrayVector ){}
+gl.uniform3f = function( uintLocation, fG, fY, fZ ){}
+gl.uniform3fv = function( uintLocation, float32ArrayVector ){}
+gl.uniform3i = function( uintLocation, intX, intY, intZ ){}
+gl.uniform3iv = function( uintLocation, int32ArrayVector ){}
+gl.uniform4f = function( uintLocation, fG, fY,  fZ, floatW ){}
+gl.uniform4fv = function( uintLocation, float32ArrayVector ){}
+gl.uniform4i = function( uintLocation, intX, intY, intZ, intW ){}
+gl.uniform4iv = function( uintLocation, int32ArrayVector ){}
+gl.uniformMatrix2fv = function( uintLocation, bTranspose, float32ArrayRawData ){}
+gl.uniformMatrix3fv = function( uintLocation, bTranspose, float32ArrayRawData ){}
+gl.uniformMatrix4fv = function( uintLocation, bTranspose, float32ArrayRawData ){}
+gl.useProgram = function( oProgram ){}
+gl.validateProgram = function( oProgram ){}
+gl.vertexAttrib1f = function( uintLocation, fG ){}
+gl.vertexAttrib1fv = function( uintLocation, float32ArrayVector ){}
+gl.vertexAttrib2f = function( uintLocation, fG, fY ){}
+gl.vertexAttrib2fv = function( uintLocation, flaot32ArrayVector ){}
+gl.vertexAttrib3f = function( uintLocation, fG, fY, fZ ){}
+gl.vertexAttrib3fv = function( uintLocation, float32ArrayVector ){}
+gl.vertexAttrib4f = function( uintLocation, fG, fY, fZ, floatW ){}
+gl.vertexAttrib4fv = function( uintLocation, float32ArrayVector ){}
+gl.vertexAttribPointer = function( uintIndex, intSize, eType, bNormalized, intStride, intOffset ){}
+gl.viewport = function( intX, intY, intWidth, intHeight ){}
+
+
+gl.DEPTH_BUFFER_BIT = "DEPTH_BUFFER_BIT";
+gl.STENCIL_BUFFER_BIT = "STENCIL_BUFFER_BIT";
+gl.COLOR_BUFFER_BIT = "COLOR_BUFFER_BIT";
+gl.POINTS = "POINTS";
+gl.LINES = "LINES";
+gl.LINE_LOOP = "LINE_LOOP";
+gl.LINE_STRIP = "LINE_STRIP";
+gl.TRIANGLES = "TRIANGLES";
+gl.TRIANGLE_STRIP = "TRIANGLE_STRIP";
+gl.TRIANGLE_FAN = "TRIANGLE_FAN";
+gl.ZERO = "ZERO";
+gl.ONE = "ONE";
+gl.SRC_COLOR = "SRC_COLOR";
+gl.ONE_MINUS_SRC_COLOR = "ONE_MINUS_SRC_COLOR";
+gl.SRC_ALPHA = "SRC_ALPHA";
+gl.ONE_MINUS_SRC_ALPHA = "ONE_MINUS_SRC_ALPHA";
+gl.DST_ALPHA = "DST_ALPHA";
+gl.ONE_MINUS_DST_ALPHA = "ONE_MINUS_DST_ALPHA";
+gl.DST_COLOR = "DST_COLOR";
+gl.ONE_MINUS_DST_COLOR = "ONE_MINUS_DST_COLOR";
+gl.SRC_ALPHA_SATURATE = "SRC_ALPHA_SATURATE";
+gl.FUNC_ADD = "FUNC_ADD";
+gl.BLEND_EQUATION = "BLEND_EQUATION";
+gl.BLEND_EQUATION_RGB = "BLEND_EQUATION_RGB";
+gl.BLEND_EQUATION_ALPHA = "BLEND_EQUATION_ALPHA";
+gl.FUNC_SUBTRACT = "FUNC_SUBTRACT";
+gl.FUNC_REVERSE_SUBTRACT = "FUNC_REVERSE_SUBTRACT";
+gl.BLEND_DST_RGB = "BLEND_DST_RGB";
+gl.BLEND_SRC_RGB = "BLEND_SRC_RGB";
+gl.BLEND_DST_ALPHA = "BLEND_DST_ALPHA";
+gl.BLEND_SRC_ALPHA = "BLEND_SRC_ALPHA";
+gl.CONSTANT_COLOR = "CONSTANT_COLOR";
+gl.ONE_MINUS_CONSTANT_COLOR = "ONE_MINUS_CONSTANT_COLOR";
+gl.CONSTANT_ALPHA = "CONSTANT_ALPHA";
+gl.ONE_MINUS_CONSTANT_ALPHA = "ONE_MINUS_CONSTANT_ALPHA";
+gl.BLEND_COLOR = "BLEND_COLOR";
+gl.ARRAY_BUFFER = "ARRAY_BUFFER";
+gl.ELEMENT_ARRAY_BUFFER = "ELEMENT_ARRAY_BUFFER";
+gl.ARRAY_BUFFER_BINDING = "ARRAY_BUFFER_BINDING";
+gl.ELEMENT_ARRAY_BUFFER_BINDING = "ELEMENT_ARRAY_BUFFER_BINDING";
+gl.STREAM_DRAW = "STREAM_DRAW";
+gl.STATIC_DRAW = "STATIC_DRAW";
+gl.DYNAMIC_DRAW = "DYNAMIC_DRAW";
+gl.BUFFER_SIZE = "BUFFER_SIZE";
+gl.BUFFER_USAGE = "BUFFER_USAGE";
+gl.CURRENT_VERTEX_ATTRIB = "CURRENT_VERTEX_ATTRIB";
+gl.FRONT = "FRONT";
+gl.BACK = "BACK";
+gl.FRONT_AND_BACK = "FRONT_AND_BACK";
+gl.TEXTURE_2D = "TEXTURE_2D";
+gl.CULL_FACE = "CULL_FACE";
+gl.BLEND = "BLEND";
+gl.DITHER = "DITHER";
+gl.STENCIL_TEST = "STENCIL_TEST";
+gl.DEPTH_TEST = "DEPTH_TEST";
+gl.SCISSOR_TEST = "SCISSOR_TEST";
+gl.POLYGON_OFFSET_FILL = "POLYGON_OFFSET_FILL";
+gl.SAMPLE_ALPHA_TO_COVERAGE = "SAMPLE_ALPHA_TO_COVERAGE";
+gl.SAMPLE_COVERAGE = "SAMPLE_COVERAGE";
+gl.NO_ERROR = "NO_ERROR";
+gl.INVALID_ENUM = "INVALID_ENUM";
+gl.INVALID_VALUE = "INVALID_VALUE";
+gl.INVALID_OPERATION = "INVALID_OPERATION";
+gl.OUT_OF_MEMORY = "OUT_OF_MEMORY";
+gl.CW = "CW";
+gl.CCW = "CCW";
+gl.LINE_WIDTH = "LINE_WIDTH";
+gl.ALIASED_POINT_SIZE_RANGE = "ALIASED_POINT_SIZE_RANGE";
+gl.ALIASED_LINE_WIDTH_RANGE = "ALIASED_LINE_WIDTH_RANGE";
+gl.CULL_FACE_MODE = "CULL_FACE_MODE";
+gl.FRONT_FACE = "FRONT_FACE";
+gl.DEPTH_RANGE = "DEPTH_RANGE";
+gl.DEPTH_WRITEMASK = "DEPTH_WRITEMASK";
+gl.DEPTH_CLEAR_VALUE = "DEPTH_CLEAR_VALUE";
+gl.DEPTH_FUNC = "DEPTH_FUNC";
+gl.STENCIL_CLEAR_VALUE = "STENCIL_CLEAR_VALUE";
+gl.STENCIL_FUNC = "STENCIL_FUNC";
+gl.STENCIL_FAIL = "STENCIL_FAIL";
+gl.STENCIL_PASS_DEPTH_FAIL = "STENCIL_PASS_DEPTH_FAIL";
+gl.STENCIL_PASS_DEPTH_PASS = "STENCIL_PASS_DEPTH_PASS";
+gl.STENCIL_REF = "STENCIL_REF";
+gl.STENCIL_VALUE_MASK = "STENCIL_VALUE_MASK";
+gl.STENCIL_WRITEMASK = "STENCIL_WRITEMASK";
+gl.STENCIL_BACK_FUNC = "STENCIL_BACK_FUNC";
+gl.STENCIL_BACK_FAIL = "STENCIL_BACK_FAIL";
+gl.STENCIL_BACK_PASS_DEPTH_FAIL = "STENCIL_BACK_PASS_DEPTH_FAIL";
+gl.STENCIL_BACK_PASS_DEPTH_PASS = "STENCIL_BACK_PASS_DEPTH_PASS";
+gl.STENCIL_BACK_REF = "STENCIL_BACK_REF";
+gl.STENCIL_BACK_VALUE_MASK = "STENCIL_BACK_VALUE_MASK";
+gl.STENCIL_BACK_WRITEMASK = "STENCIL_BACK_WRITEMASK";
+gl.VIEWPORT = "VIEWPORT";
+gl.SCISSOR_BOX = "SCISSOR_BOX";
+gl.COLOR_CLEAR_VALUE = "COLOR_CLEAR_VALUE";
+gl.COLOR_WRITEMASK = "COLOR_WRITEMASK";
+gl.UNPACK_ALIGNMENT = "UNPACK_ALIGNMENT";
+gl.PACK_ALIGNMENT = "PACK_ALIGNMENT";
+gl.MAX_TEXTURE_SIZE = "MAX_TEXTURE_SIZE";
+gl.MAX_VIEWPORT_DIMS = "MAX_VIEWPORT_DIMS";
+gl.SUBPIXEL_BITS = "SUBPIXEL_BITS";
+gl.RED_BITS = "RED_BITS";
+gl.GREEN_BITS = "GREEN_BITS";
+gl.BLUE_BITS = "BLUE_BITS";
+gl.ALPHA_BITS = "ALPHA_BITS";
+gl.DEPTH_BITS = "DEPTH_BITS";
+gl.STENCIL_BITS = "STENCIL_BITS";
+gl.POLYGON_OFFSET_UNITS = "POLYGON_OFFSET_UNITS";
+gl.POLYGON_OFFSET_FACTOR = "POLYGON_OFFSET_FACTOR";
+gl.TEXTURE_BINDING_2D = "TEXTURE_BINDING_2D";
+gl.SAMPLE_BUFFERS = "SAMPLE_BUFFERS";
+gl.SAMPLES = "SAMPLES";
+gl.SAMPLE_COVERAGE_VALUE = "SAMPLE_COVERAGE_VALUE";
+gl.SAMPLE_COVERAGE_INVERT = "SAMPLE_COVERAGE_INVERT";
+gl.COMPRESSED_TEXTURE_FORMATS = "COMPRESSED_TEXTURE_FORMATS";
+gl.DONT_CARE = "DONT_CARE";
+gl.FASTEST = "FASTEST";
+gl.NICEST = "NICEST";
+gl.GENERATE_MIPMAP_HINT = "GENERATE_MIPMAP_HINT";
+gl.BYTE = "BYTE";
+gl.UNSIGNED_BYTE = "UNSIGNED_BYTE";
+gl.SHORT = "SHORT";
+gl.UNSIGNED_SHORT = "UNSIGNED_SHORT";
+gl.INT = "INT";
+gl.UNSIGNED_INT = "UNSIGNED_INT";
+gl.FLOAT = "FLOAT";
+gl.DEPTH_COMPONENT = "DEPTH_COMPONENT";
+gl.ALPHA = "ALPHA";
+gl.RGB = "RGB";
+gl.RGBA = "RGBA";
+gl.LUMINANCE = "LUMINANCE";
+gl.LUMINANCE_ALPHA = "LUMINANCE_ALPHA";
+gl.UNSIGNED_SHORT_4_4_4_4 = "UNSIGNED_SHORT_4_4_4_4";
+gl.UNSIGNED_SHORT_5_5_5_1 = "UNSIGNED_SHORT_5_5_5_1";
+gl.UNSIGNED_SHORT_5_6_5 = "UNSIGNED_SHORT_5_6_5";
+gl.FRAGMENT_SHADER = "FRAGMENT_SHADER";
+gl.VERTEX_SHADER = "VERTEX_SHADER";
+gl.MAX_VERTEX_ATTRIBS = "MAX_VERTEX_ATTRIBS";
+gl.MAX_VERTEX_UNIFORM_VECTORS = "MAX_VERTEX_UNIFORM_VECTORS";
+gl.MAX_VARYING_VECTORS = "MAX_VARYING_VECTORS";
+gl.MAX_COMBINED_TEXTURE_IMAGE_UNITS = "MAX_COMBINED_TEXTURE_IMAGE_UNITS";
+gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS = "MAX_VERTEX_TEXTURE_IMAGE_UNITS";
+gl.MAX_TEXTURE_IMAGE_UNITS = "MAX_TEXTURE_IMAGE_UNITS";
+gl.MAX_FRAGMENT_UNIFORM_VECTORS = "MAX_FRAGMENT_UNIFORM_VECTORS";
+gl.SHADER_TYPE = "SHADER_TYPE";
+gl.DELETE_STATUS = "DELETE_STATUS";
+gl.LINK_STATUS = "LINK_STATUS";
+gl.VALIDATE_STATUS = "VALIDATE_STATUS";
+gl.ATTACHED_SHADERS = "ATTACHED_SHADERS";
+gl.ACTIVE_UNIFORMS = "ACTIVE_UNIFORMS";
+gl.ACTIVE_ATTRIBUTES = "ACTIVE_ATTRIBUTES";
+gl.SHADING_LANGUAGE_VERSION = "SHADING_LANGUAGE_VERSION";
+gl.CURRENT_PROGRAM = "CURRENT_PROGRAM";
+gl.NEVER = "NEVER";
+gl.LESS = "LESS";
+gl.EQUAL = "EQUAL";
+gl.LEQUAL = "LEQUAL";
+gl.GREATER = "GREATER";
+gl.NOTEQUAL = "NOTEQUAL";
+gl.GEQUAL = "GEQUAL";
+gl.ALWAYS = "ALWAYS";
+gl.KEEP = "KEEP";
+gl.REPLACE = "REPLACE";
+gl.INCR = "INCR";
+gl.DECR = "DECR";
+gl.INVERT = "INVERT";
+gl.INCR_WRAP = "INCR_WRAP";
+gl.DECR_WRAP = "DECR_WRAP";
+gl.VENDOR = "VENDOR";
+gl.RENDERER = "RENDERER";
+gl.VERSION = "VERSION";
+gl.NEAREST = "NEAREST";
+gl.LINEAR = "LINEAR";
+gl.NEAREST_MIPMAP_NEAREST = "NEAREST_MIPMAP_NEAREST";
+gl.LINEAR_MIPMAP_NEAREST = "LINEAR_MIPMAP_NEAREST";
+gl.NEAREST_MIPMAP_LINEAR = "NEAREST_MIPMAP_LINEAR";
+gl.LINEAR_MIPMAP_LINEAR = "LINEAR_MIPMAP_LINEAR";
+gl.TEXTURE_MAG_FILTER = "TEXTURE_MAG_FILTER";
+gl.TEXTURE_MIN_FILTER = "TEXTURE_MIN_FILTER";
+gl.TEXTURE_WRAP_S = "TEXTURE_WRAP_S";
+gl.TEXTURE_WRAP_T = "TEXTURE_WRAP_T";
+gl.TEXTURE = "TEXTURE";
+gl.TEXTURE_CUBE_MAP = "TEXTURE_CUBE_MAP";
+gl.TEXTURE_BINDING_CUBE_MAP = "TEXTURE_BINDING_CUBE_MAP";
+gl.TEXTURE_CUBE_MAP_POSITIVE_X = "TEXTURE_CUBE_MAP_POSITIVE_X";
+gl.TEXTURE_CUBE_MAP_NEGATIVE_X = "TEXTURE_CUBE_MAP_NEGATIVE_X";
+gl.TEXTURE_CUBE_MAP_POSITIVE_Y = "TEXTURE_CUBE_MAP_POSITIVE_Y";
+gl.TEXTURE_CUBE_MAP_NEGATIVE_Y = "TEXTURE_CUBE_MAP_NEGATIVE_Y";
+gl.TEXTURE_CUBE_MAP_POSITIVE_Z = "TEXTURE_CUBE_MAP_POSITIVE_Z";
+gl.TEXTURE_CUBE_MAP_NEGATIVE_Z = "TEXTURE_CUBE_MAP_NEGATIVE_Z";
+gl.MAX_CUBE_MAP_TEXTURE_SIZE = "MAX_CUBE_MAP_TEXTURE_SIZE";
+gl.TEXTURE0 = "TEXTURE0";
+gl.TEXTURE1 = "TEXTURE1";
+gl.TEXTURE2 = "TEXTURE2";
+gl.TEXTURE3 = "TEXTURE3";
+gl.TEXTURE4 = "TEXTURE4";
+gl.TEXTURE5 = "TEXTURE5";
+gl.TEXTURE6 = "TEXTURE6";
+gl.TEXTURE7 = "TEXTURE7";
+gl.TEXTURE8 = "TEXTURE8";
+gl.TEXTURE9 = "TEXTURE9";
+gl.TEXTURE10 = "TEXTURE10";
+gl.TEXTURE11 = "TEXTURE11";
+gl.TEXTURE12 = "TEXTURE12";
+gl.TEXTURE13 = "TEXTURE13";
+gl.TEXTURE14 = "TEXTURE14";
+gl.TEXTURE15 = "TEXTURE15";
+gl.TEXTURE16 = "TEXTURE16";
+gl.TEXTURE17 = "TEXTURE17";
+gl.TEXTURE18 = "TEXTURE18";
+gl.TEXTURE19 = "TEXTURE19";
+gl.TEXTURE20 = "TEXTURE20";
+gl.TEXTURE21 = "TEXTURE21";
+gl.TEXTURE22 = "TEXTURE22";
+gl.TEXTURE23 = "TEXTURE23";
+gl.TEXTURE24 = "TEXTURE24";
+gl.TEXTURE25 = "TEXTURE25";
+gl.TEXTURE26 = "TEXTURE26";
+gl.TEXTURE27 = "TEXTURE27";
+gl.TEXTURE28 = "TEXTURE28";
+gl.TEXTURE29 = "TEXTURE29";
+gl.TEXTURE30 = "TEXTURE30";
+gl.TEXTURE31 = "TEXTURE31";
+gl.ACTIVE_TEXTURE = "ACTIVE_TEXTURE";
+gl.REPEAT = "REPEAT";
+gl.CLAMP_TO_EDGE = "CLAMP_TO_EDGE";
+gl.MIRRORED_REPEAT = "MIRRORED_REPEAT";
+gl.FLOAT_VEC2 = "FLOAT_VEC2";
+gl.FLOAT_VEC3 = "FLOAT_VEC3";
+gl.FLOAT_VEC4 = "FLOAT_VEC4";
+gl.INT_VEC2 = "INT_VEC2";
+gl.INT_VEC3 = "INT_VEC3";
+gl.INT_VEC4 = "INT_VEC4";
+gl.BOOL = "BOOL";
+gl.BOOL_VEC2 = "BOOL_VEC2";
+gl.BOOL_VEC3 = "BOOL_VEC3";
+gl.BOOL_VEC4 = "BOOL_VEC4";
+gl.FLOAT_MAT2 = "FLOAT_MAT2";
+gl.FLOAT_MAT3 = "FLOAT_MAT3";
+gl.FLOAT_MAT4 = "FLOAT_MAT4";
+gl.SAMPLER_2D = "SAMPLER_2D";
+gl.SAMPLER_CUBE = "SAMPLER_CUBE";
+gl.VERTEX_ATTRIB_ARRAY_ENABLED = "VERTEX_ATTRIB_ARRAY_ENABLED";
+gl.VERTEX_ATTRIB_ARRAY_SIZE = "VERTEX_ATTRIB_ARRAY_SIZE";
+gl.VERTEX_ATTRIB_ARRAY_STRIDE = "VERTEX_ATTRIB_ARRAY_STRIDE";
+gl.VERTEX_ATTRIB_ARRAY_TYPE = "VERTEX_ATTRIB_ARRAY_TYPE";
+gl.VERTEX_ATTRIB_ARRAY_NORMALIZED = "VERTEX_ATTRIB_ARRAY_NORMALIZED";
+gl.VERTEX_ATTRIB_ARRAY_POINTER = "VERTEX_ATTRIB_ARRAY_POINTER";
+gl.VERTEX_ATTRIB_ARRAY_BUFFER_BINDING = "VERTEX_ATTRIB_ARRAY_BUFFER_BINDING";
+gl.IMPLEMENTATION_COLOR_READ_TYPE = "IMPLEMENTATION_COLOR_READ_TYPE";
+gl.IMPLEMENTATION_COLOR_READ_FORMAT = "IMPLEMENTATION_COLOR_READ_FORMAT";
+gl.COMPILE_STATUS = "COMPILE_STATUS";
+gl.LOW_FLOAT = "LOW_FLOAT";
+gl.MEDIUM_FLOAT = "MEDIUM_FLOAT";
+gl.HIGH_FLOAT = "HIGH_FLOAT";
+gl.LOW_INT = "LOW_INT";
+gl.MEDIUM_INT = "MEDIUM_INT";
+gl.HIGH_INT = "HIGH_INT";
+gl.FRAMEBUFFER = "FRAMEBUFFER";
+gl.RENDERBUFFER = "RENDERBUFFER";
+gl.RGBA4 = "RGBA4";
+gl.RGB5_A1 = "RGB5_A1";
+gl.RGB565 = "RGB565";
+gl.DEPTH_COMPONENT16 = "DEPTH_COMPONENT16";
+gl.STENCIL_INDEX = "STENCIL_INDEX";
+gl.STENCIL_INDEX8 = "STENCIL_INDEX8";
+gl.DEPTH_STENCIL = "DEPTH_STENCIL";
+gl.RENDERBUFFER_WIDTH = "RENDERBUFFER_WIDTH";
+gl.RENDERBUFFER_HEIGHT = "RENDERBUFFER_HEIGHT";
+gl.RENDERBUFFER_INTERNAL_FORMAT = "RENDERBUFFER_INTERNAL_FORMAT";
+gl.RENDERBUFFER_RED_SIZE = "RENDERBUFFER_RED_SIZE";
+gl.RENDERBUFFER_GREEN_SIZE = "RENDERBUFFER_GREEN_SIZE";
+gl.RENDERBUFFER_BLUE_SIZE = "RENDERBUFFER_BLUE_SIZE";
+gl.RENDERBUFFER_ALPHA_SIZE = "RENDERBUFFER_ALPHA_SIZE";
+gl.RENDERBUFFER_DEPTH_SIZE = "RENDERBUFFER_DEPTH_SIZE";
+gl.RENDERBUFFER_STENCIL_SIZE = "RENDERBUFFER_STENCIL_SIZE";
+gl.FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE = "FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE";
+gl.FRAMEBUFFER_ATTACHMENT_OBJECT_NAME = "FRAMEBUFFER_ATTACHMENT_OBJECT_NAME";
+gl.FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL = "FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL";
+gl.FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE = "FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE";
+gl.COLOR_ATTACHMENT0 = "COLOR_ATTACHMENT0";
+gl.DEPTH_ATTACHMENT = "DEPTH_ATTACHMENT";
+gl.STENCIL_ATTACHMENT = "STENCIL_ATTACHMENT";
+gl.DEPTH_STENCIL_ATTACHMENT = "DEPTH_STENCIL_ATTACHMENT";
+gl.NONE = "NONE";
+gl.FRAMEBUFFER_COMPLETE = "FRAMEBUFFER_COMPLETE";
+gl.FRAMEBUFFER_INCOMPLETE_ATTACHMENT = "FRAMEBUFFER_INCOMPLETE_ATTACHMENT";
+gl.FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT = "FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT";
+gl.FRAMEBUFFER_INCOMPLETE_DIMENSIONS = "FRAMEBUFFER_INCOMPLETE_DIMENSIONS";
+gl.FRAMEBUFFER_UNSUPPORTED = "FRAMEBUFFER_UNSUPPORTED";
+gl.FRAMEBUFFER_BINDING = "FRAMEBUFFER_BINDING";
+gl.RENDERBUFFER_BINDING = "RENDERBUFFER_BINDING";
+gl.MAX_RENDERBUFFER_SIZE = "MAX_RENDERBUFFER_SIZE";
+gl.INVALID_FRAMEBUFFER_OPERATION = "INVALID_FRAMEBUFFER_OPERATION";
+gl.UNPACK_FLIP_Y_WEBGL = "UNPACK_FLIP_Y_WEBGL";
+gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL = "UNPACK_PREMULTIPLY_ALPHA_WEBGL";
+gl.CONTEXT_LOST_WEBGL = "CONTEXT_LOST_WEBGL";
+gl.UNPACK_COLORSPACE_CONVERSION_WEBGL = "UNPACK_COLORSPACE_CONVERSION_WEBGL";
+gl.BROWSER_DEFAULT_WEBGL = "BROWSER_DEFAULT_WEBGL";
 /**
  * Created by dnvy0084 on 2015. 11. 21..
  */
@@ -1291,6 +1732,9 @@
 /****************
  * testmain.js
  *****************/
+ 
+ /* global test */
+ /* global glbasic */
 
 (function () {
 
@@ -1305,17 +1749,17 @@
 
     function makeList() {
 
-        var currentCase = testcase.NodeTest;
+        var currentCase = testcase.TempTest;
         var list = document.getElementById( "list" );
 
         for( var s in testcase ){
             if( s == "BaseCase" ) continue;
 
             var opt = document.createElement("option");
-            opt.value = s;
+            opt.value = s; 
             opt.innerHTML = s;
 
-            list.appendChild( opt );
+            list.appendChild( opt ); 
         }
 
         list.addEventListener( "change", onChange );
@@ -1875,6 +2319,7 @@
  
  /* global glbasic */
  /* global requestAnimationFrame */
+ /* global gl */
 
 (function () {
 
@@ -1884,9 +2329,9 @@
     var tex = glbasic.import("texture");
     var Texture = tex.Texture;
     var Node = tex.Node;
-
+    
     function NodeTest() {
-
+        
     }
 
     var p = test.extends(NodeTest, c.BaseCase);
@@ -1906,7 +2351,7 @@
 
         var t = 0;
         var randLen = 300;
-
+        
         var onRender = (function render( ms ) {
 
             this.id = requestAnimationFrame( onRender );
@@ -2001,6 +2446,9 @@
  * RendererTest.js
  *****************/
 
+ /* global glbasic */
+ /* global WebGLRenderingContext gl */
+
 (function () {
 
     "use strict";
@@ -2015,17 +2463,19 @@
     var gl;
 
     function RendererTest() {
-
+        
     }
 
     var p = test.extends(RendererTest, c.BaseCase);
 
     p.start = function () {
-
+        
         this.setTitle( "renderer test" );
 
         gl = document.getElementById("canvas").getContext( "webgl" );
         gl.clearColor( 0, 0, 0, 1 );
+        
+        console.log( gl );
 
         util.loadItems(
             [ "shader/quadVertexShader.cpp", "shader/colorMatrixFragmentShader.cpp"],
@@ -2163,6 +2613,40 @@
 })();
 
 
+
+/* global test */
+/* global glbasic */
+
+(function(){
+    
+    var testcase = test.import( "testcase" );
+    var BaseCase = testcase.BaseCase;
+    
+    var display = glbasic.import( "display" );
+    var DisplayObject = display.DisplayObject;
+    var DisplayObjectContainer = display.DisplayObjectContainer;
+    
+    function TempTest(){
+        var o = new DisplayObjectContainer();
+        
+    }
+    
+    var p = test.extends( TempTest, BaseCase );
+    
+    p.start = function(){
+        
+        var gl = document.getElementById( "canvas" ).getContext("webgl");
+        
+        this.setTitle( "temp test" );
+    }
+    
+    p.clear = function(){
+        var o = new DisplayObjectContainer();
+    }
+    
+    testcase.TempTest = TempTest;
+    
+})();
 /****************
  * TestSyncBuffer.js
  *****************/
