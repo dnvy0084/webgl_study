@@ -43,6 +43,162 @@
     };
 
 })( typeof window === "undefined" ? this : window );
+/****************
+ * gl2d.js
+ *****************/
+
+(function ( global ) {
+
+    "use stirct";
+
+    global.gl2d = usenamespace( global.gl2d || {} );
+
+})( this );
+
+
+/****************
+ * Ticker.js
+ *****************/
+
+(function () {
+
+    "use strict";
+
+    var core = gl2d.import("core");
+
+    function Ticker() {
+        this.objects = [];
+        this.bindingUpdate = this.update.bind( this );
+        this.start();
+    }
+
+    Ticker.prototype = {
+        constructor: Ticker,
+
+        start: function () {
+            this.update(0);
+        },
+
+        stop: function () {
+            webkitCancelRequestAnimationFrame( this.reqID );
+        },
+
+        update: function (ms) {
+
+            this.reqID = requestAnimationFrame( this.bindingUpdate );
+
+            var l = this.objects.length;
+            if( l == 0 ) return;
+
+            var n = 0, o;
+
+            for ( var i = 0; i < l; ++i ) {
+
+                o = this.objects[i];
+
+                if( o == null ) continue;
+                if( i != n ) this.objects[n] = o;
+
+                o.advanceTime( ms );
+                ++n;
+            }
+
+            for ( l = this.objects.length; i < l ; ) {
+                this.objects[n++] = this.objects[i++];
+            }
+
+            this.objects.length = n;
+        },
+
+        add: function (o) {
+
+            if( !o.advanceTime ) return null;
+
+            this.objects.push( o );
+            return o;
+        },
+
+        remove: function (o) {
+
+            var index = this.objects.indexOf( o );
+            if( index == -1 ) return null;
+
+            this.objects[index] = null;
+        },
+
+        contain: function (o) {
+            return this.objects.indexOf(o) != -1;
+        },
+    };
+
+    core.Ticker = Ticker;
+
+})();
+
+
+/****************
+ * DisplayObject.js
+ *****************/
+
+(function () {
+
+    "use strict";
+
+    var display = gl2d.import("display");
+
+    function DisplayObject() {
+
+    }
+
+    display.DisplayObject = DisplayObject;
+
+})();
+
+
+/****************
+ * DisplayObjectContainer.js
+ *****************/
+
+(function () {
+
+    "use strict";
+
+    var display = gl2d.import("display");
+    var DisplayObject = display.DisplayObject;
+
+    function DisplayObjectContainer() {
+
+    }
+
+    gl2d.extends( DisplayObjectContainer, DisplayObject );
+
+    display.DisplayObjectContainer = DisplayObjectContainer;
+
+})();
+
+
+/****************
+ * Stage.js
+ *****************/
+
+(function () {
+
+    "use strict";
+
+    var display = gl2d.import("display");
+    var DisplayObjectContainer = display.DisplayObjectContainer;
+
+    function Stage() {
+
+    }
+
+    gl2d.extends( Stage, DisplayObjectContainer );
+
+    display.Stage = Stage;
+
+})();
+
+
 
 /****************
  * srcmain.js
@@ -1749,7 +1905,7 @@ gl.BROWSER_DEFAULT_WEBGL = "BROWSER_DEFAULT_WEBGL";
 
     function makeList() {
 
-        var currentCase = testcase.TempTest;
+        var currentCase = testcase.TestGL2D;
         var list = document.getElementById( "list" );
 
         for( var s in testcase ){
@@ -2622,7 +2778,7 @@ gl.BROWSER_DEFAULT_WEBGL = "BROWSER_DEFAULT_WEBGL";
     var testcase = test.import( "testcase" );
     var BaseCase = testcase.BaseCase;
     
-    var display = glbasic.import( "display" );
+    var display = glbasic.display;
     var DisplayObject = display.DisplayObject;
     var DisplayObjectContainer = display.DisplayObjectContainer;
     
@@ -2641,12 +2797,59 @@ gl.BROWSER_DEFAULT_WEBGL = "BROWSER_DEFAULT_WEBGL";
     }
     
     p.clear = function(){
-        var o = new DisplayObjectContainer();
+        var o = new display.DisplayObjectContainer();
     }
     
     testcase.TempTest = TempTest;
     
 })();
+/****************
+ * TestGL2D.js
+ *****************/
+
+(function () {
+
+    "use strict";
+
+    var c = test.import("testcase");
+    var core = gl2d.import("core");
+
+    function TestGL2D() {
+
+    }
+
+    var p = test.extends(TestGL2D, c.BaseCase);
+
+    p.start = function () {
+        this.setTitle( "TestGL2D" );
+
+        var ticker = new core.Ticker();
+        var a = [];
+
+        for (var i = 0; i < 10; i++) {
+
+            var o = {};
+
+            o.advanceTime = function(ms){
+                if( ms > this.i * 1000 ) ticker.remove( this );
+            }.bind(o);
+
+            o.i = i;
+            ticker.add( o );
+
+            a.push(o);
+        }
+    };
+
+    p.clear = function () {
+
+    };
+
+    c.TestGL2D = TestGL2D;
+
+})();
+
+
 /****************
  * TestSyncBuffer.js
  *****************/

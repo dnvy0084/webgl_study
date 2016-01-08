@@ -19,7 +19,7 @@
 
     function makeList() {
 
-        var currentCase = testcase.TempTest;
+        var currentCase = testcase.TestGL2D;
         var list = document.getElementById( "list" );
 
         for( var s in testcase ){

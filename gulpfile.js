@@ -9,6 +9,7 @@ var del = require( "del" );
 var paths = {
     src: [
         "src/namespace.js",
+        "src/gl2d/**/*.js",
         "src/srcmain.js",
         "src/geom/*.js",
         "src/**/*.js",
